@@ -1,7 +1,5 @@
 # Inventory Tracker App
 
-![Inventory Tracker](https://via.placeholder.com/800x400.png?text=Inventory+Tracker+App)
-
 ## 📌 Overview
 The **Inventory Tracker App** is a full-stack application designed to track and manage inventory in real-time. It allows multiple users (1-15) within an organization to update inventory as items are restocked or used. The backend is powered by **Node.js with Express.js**, while the frontend is built using **React.js**.
 
