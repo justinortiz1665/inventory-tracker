@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-const db = require("../database");
-
-db.run(`
-  CREATE TABLE IF NOT EXISTS inventory (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    category TEXT,
-    quantity INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )
-`);
-
-module.exports = db;
-=======
 const pool = require("../database"); // Connects to Supabase DB
 
 // Get all inventory items
@@ -64,4 +49,3 @@ const deleteInventoryItem = async (id) => {
 };
 
 module.exports = { getAllInventory, getInventoryById, addInventoryItem, updateInventoryItem, deleteInventoryItem };
->>>>>>> 17ae09cc (Initial commit of inventory tracker progress)

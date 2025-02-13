@@ -2,11 +2,17 @@
   text-align: center;
 }
 
-<<<<<<< HEAD
 .App-header {
   background-color: #282c34;
-  min-height: 10vh;
-=======
+  min-height: 100vh; /* Keep full height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -18,23 +24,11 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
->>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
 .App-link {
   color: #61dafb;
 }
 
-<<<<<<< HEAD
+/* Inventory List Styles */
 h1 {
   text-align: center;
   margin-top: 20px;
@@ -63,6 +57,7 @@ tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
+/* Button Styles */
 button {
   margin: 5px;
   padding: 8px 12px;
@@ -77,6 +72,7 @@ button:hover {
   background-color: #0056b3;
 }
 
+/* Form Styles */
 form {
   margin: 20px auto;
   width: 50%;
@@ -101,7 +97,7 @@ form button:hover {
   background-color: #218838;
 }
 
-=======
+/* Logo Animation */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -110,4 +106,3 @@ form button:hover {
     transform: rotate(360deg);
   }
 }
->>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
