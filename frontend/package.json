@@ -1,21 +1,39 @@
 {
+<<<<<<< HEAD
   "name": "inventory-tracker-frontend",
   "version": "0.1.0",
   "private": true,
   "description": "Frontend for the Inventory Tracker App",
   "author": "Justin Ortiz",
+=======
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+>>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
   "dependencies": {
     "axios": "^1.7.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+<<<<<<< HEAD
+=======
+    "react-router-dom": "^7.1.5",
+>>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
+<<<<<<< HEAD
     "start": "PORT=3000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+=======
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "npm start"
+>>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +52,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+<<<<<<< HEAD
+=======
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+>>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
   }
 }

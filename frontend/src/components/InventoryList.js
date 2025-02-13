@@ -2,15 +2,21 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const InventoryList = () => {
+<<<<<<< HEAD
     const [inventory, setInventory] = useState([]); // State to store the inventory list
     const [editItem, setEditItem] = useState(null); // State to store the item being edited
     const [searchTerm, setSearchTerm] = useState(""); // State for the search input
 
     // Fetch inventory items from the backend when the component loads
+=======
+    const [inventory, setInventory] = useState([]); // State to store inventory
+
+>>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
     useEffect(() => {
         fetchInventory();
     }, []);
 
+<<<<<<< HEAD
     // Function to fetch inventory items
     const fetchInventory = () => {
         axios
@@ -69,6 +75,20 @@ const InventoryList = () => {
                     width: "90%",
                 }}
             />
+=======
+    const fetchInventory = async () => {
+        try {
+            const response = await axios.get("http://localhost:5001/api/inventory");
+            setInventory(response.data); // Store response in state
+        } catch (error) {
+            console.error("Error fetching inventory:", error);
+        }
+    };
+
+    return (
+        <div>
+            <h2>Inventory List</h2>
+>>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
             <table>
                 <thead>
                     <tr>
@@ -79,6 +99,7 @@ const InventoryList = () => {
                     </tr>
                 </thead>
                 <tbody>
+<<<<<<< HEAD
                     {filteredInventory.map((item) => (
                         <tr key={item.id}>
                             <td>{item.item_name}</td>
@@ -122,6 +143,27 @@ const InventoryList = () => {
                     </button>
                 </form>
             )}
+=======
+                    {inventory.length > 0 ? (
+                        inventory.map((item) => (
+                            <tr key={item.id}>
+                                <td>{item.item_name}</td>
+                                <td>{item.category}</td>
+                                <td>{item.quantity}</td>
+                                <td>
+                                    <button>Edit</button>
+                                    <button>Delete</button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4">No inventory items found.</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+>>>>>>> 17ae09cc (Initial commit of inventory tracker progress)
         </div>
     );
 };
