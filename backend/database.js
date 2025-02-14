@@ -1,11 +1,9 @@
-const sqlite3 = require("sqlite3").verbose();
+const { Pool } = require("pg");
 
-const db = new sqlite3.Database("./inventory.db", (err) => {
-  if (err) {
-    console.error("Database connection failed:", err.message);
-  } else {
-    console.log("Connected to SQLite database.");
-  }
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false } // Required for Supabase connections
 });
 
-module.exports = db;
+module.exports = pool;
+

@@ -1,16 +1,26 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const pool = require("./database"); // Ensure database connection is correct
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Import routes
+const authRoutes = require("./routes/authRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
-app.use("/api", inventoryRoutes);
+
+// Use the API Base URL from .env
+const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5001";
+
+app.use("/api/auth", authRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
 app.get("/", (req, res) => {
     res.send("Inventory Tracker API is running...");
 });
 
+// Start server
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

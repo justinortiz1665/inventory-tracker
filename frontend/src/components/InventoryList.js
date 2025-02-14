@@ -1,39 +1,42 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../config"; // Import API URL from config.js
 
 const InventoryList = () => {
-    const [inventory, setInventory] = useState([]); // State to store the inventory list
-    const [editItem, setEditItem] = useState(null); // State to store the item being edited
-    const [searchTerm, setSearchTerm] = useState(""); // State for the search input
+    const [inventory, setInventory] = useState([]); // Store inventory items
+    const [editItem, setEditItem] = useState(null); // Track item being edited
+    const [searchTerm, setSearchTerm] = useState(""); // Store search input
 
-    // Fetch inventory items from the backend when the component loads
+    // Fetch inventory on component mount
     useEffect(() => {
         fetchInventory();
     }, []);
 
-    // Function to fetch inventory items
-    const fetchInventory = () => {
-        axios
-            .get("http://localhost:5001/api/inventory")
-            .then((response) => setInventory(response.data))
-            .catch((error) => console.error("Error fetching inventory:", error));
+    // Function to fetch inventory from the backend
+    const fetchInventory = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/inventory`);
+            setInventory(response.data);
+        } catch (error) {
+            console.error("Error fetching inventory:", error);
+        }
     };
 
-    // Function to handle the edit button click
+    // Function to handle editing an item
     const handleEdit = (item) => {
-        setEditItem(item); // Set the item to be edited
+        setEditItem(item);
     };
 
-    // Function to handle form submission for editing an item
-    const handleUpdate = (e) => {
+    // Function to handle form submission when updating an item
+    const handleUpdate = async (e) => {
         e.preventDefault();
-        axios
-            .put(`http://localhost:5001/api/inventory/${editItem.id}`, editItem)
-            .then(() => {
-                fetchInventory(); // Refresh the inventory list
-                setEditItem(null); // Close the edit form
-            })
-            .catch((error) => console.error("Error updating item:", error));
+        try {
+            await axios.put(`${API_BASE_URL}/api/inventory/${editItem.id}`, editItem);
+            fetchInventory();
+            setEditItem(null); // Reset edit form
+        } catch (error) {
+            console.error("Error updating item:", error);
+        }
     };
 
     // Function to handle changes in the edit form inputs
@@ -41,15 +44,17 @@ const InventoryList = () => {
         setEditItem({ ...editItem, [e.target.name]: e.target.value });
     };
 
-    // Function to handle the delete button click
-    const handleDelete = (id) => {
-        axios
-            .delete(`http://localhost:5001/api/inventory/${id}`)
-            .then(() => fetchInventory()) // Refresh the inventory list after deletion
-            .catch((error) => console.error("Error deleting item:", error));
+    // Function to delete an inventory item
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`${API_BASE_URL}/api/inventory/${id}`);
+            fetchInventory();
+        } catch (error) {
+            console.error("Error deleting item:", error);
+        }
     };
 
-    // Filter inventory items based on the search term
+    // Filter inventory items based on search term
     const filteredInventory = inventory.filter((item) =>
         item.item_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -57,12 +62,12 @@ const InventoryList = () => {
     return (
         <div>
             <h1>Inventory List</h1>
-            {/* Add a search bar */}
+            {/* Search Bar */}
             <input
                 type="text"
                 placeholder="Search items..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+                onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
                     marginBottom: "20px",
                     padding: "10px",
@@ -79,19 +84,27 @@ const InventoryList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredInventory.map((item) => (
-                        <tr key={item.id}>
-                            <td>{item.item_name}</td>
-                            <td>{item.category}</td>
-                            <td>{item.quantity}</td>
-                            <td>
-                                <button onClick={() => handleEdit(item)}>Edit</button>
-                                <button onClick={() => handleDelete(item.id)}>Delete</button>
-                            </td>
+                    {filteredInventory.length > 0 ? (
+                        filteredInventory.map((item) => (
+                            <tr key={item.id}>
+                                <td>{item.item_name}</td>
+                                <td>{item.category}</td>
+                                <td>{item.quantity}</td>
+                                <td>
+                                    <button onClick={() => handleEdit(item)}>Edit</button>
+                                    <button onClick={() => handleDelete(item.id)}>Delete</button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4">No inventory items found.</td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
+
+            {/* Edit Form */}
             {editItem && (
                 <form onSubmit={handleUpdate}>
                     <h2>Edit Item</h2>

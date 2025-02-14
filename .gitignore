@@ -130,4 +130,12 @@ dist
 .pnp.*
 
 # Replit debugger
+<<<<<<< HEAD
 .breakpoints
+
+.breakpoints
+
+#SQLite files
+backend/inventory.db
+backend/inventory_insert_statements.sql
+>>>>>>> new-feature-branch
