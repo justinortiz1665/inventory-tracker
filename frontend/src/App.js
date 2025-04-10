@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import Dashboard from "./components/dashboard/Dashboard.js";
-import MainInventory from "./components/inventory/MainInventory";
+import Dashboard from "./components/Dashboard.js";
+import MainInventory from "./components/MainInventory";
 import "./App.css";
 
 function App() {
