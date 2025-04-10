@@ -13,12 +13,14 @@ app.use(cors({
 // Import routes
 const authRoutes = require("./routes/authRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 // Use the API Base URL from .env
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5001";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (req, res) => {
     res.send("Inventory Tracker API is running...");
