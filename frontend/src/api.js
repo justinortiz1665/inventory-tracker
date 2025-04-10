@@ -31,13 +31,21 @@ export const updateItem = async (id, itemData) => {
     }
 };
 
-export const fetchCategoryCosts = async () => {
+export const fetchDashboardData = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/inventory/categories/costs`);
-        return response.data;
+        const [lowStock, categoryCosts, recentTransactions] = await Promise.all([
+            axios.get(`${API_BASE_URL}/dashboard/low-stock`),
+            axios.get(`${API_BASE_URL}/dashboard/category-costs`),
+            axios.get(`${API_BASE_URL}/dashboard/recent-transactions`)
+        ]);
+        return {
+            lowStock: lowStock.data,
+            categoryCosts: categoryCosts.data,
+            recentTransactions: recentTransactions.data
+        };
     } catch (error) {
-        console.error("Error fetching category costs:", error);
-        return [];
+        console.error("Error fetching dashboard data:", error);
+        return { lowStock: [], categoryCosts: [], recentTransactions: [] };
     }
 };
 

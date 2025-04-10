@@ -1,42 +1,30 @@
 
 import React, { useState, useEffect } from "react";
-import { fetchInventory, fetchCategoryCosts } from "../api";
+import { fetchDashboardData } from "../api";
 
 const Dashboard = () => {
-  const [inventoryData, setInventoryData] = useState([]);
+  const [dashboardData, setDashboardData] = useState({
+    lowStock: [],
+    categoryCosts: [],
+    recentTransactions: []
+  });
 
   useEffect(() => {
-    const getInventoryData = async () => {
-      const data = await fetchInventory();
-      setInventoryData(data);
+    const getDashboardData = async () => {
+      const data = await fetchDashboardData();
+      setDashboardData(data);
     };
-    getInventoryData();
+    getDashboardData();
   }, []);
 
-  // Calculate low stock items
-  const lowStockItems = inventoryData
-    .filter(item => item.quantity <= item.min_threshold)
-    .slice(0, 3);
+  // Convert category costs array to object format for rendering
+  const categoryCosts = dashboardData.categoryCosts.reduce((acc, item) => {
+    acc[item.category] = parseFloat(item.total_cost);
+    return acc;
+  }, {});
 
-  const [categoryCosts, setCategoryCosts] = useState({});
-
-  useEffect(() => {
-    const getCategoryCosts = async () => {
-      const data = await fetchCategoryCosts();
-      // Convert array to object format for existing rendering
-      const costsObject = data.reduce((acc, item) => {
-        acc[item.category] = parseFloat(item.total_cost);
-        return acc;
-      }, {});
-      setCategoryCosts(costsObject);
-    };
-    getCategoryCosts();
-  }, []);
-
-  // Get recent items (using the most recently added/updated items)
-  const recentItems = [...inventoryData]
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-    .slice(0, 3);
+  const lowStockItems = dashboardData.lowStock;
+  const recentItems = dashboardData.recentTransactions;
 
   return (
     <div className="dashboard-container">
