@@ -5,7 +5,10 @@ const pool = require("./database"); // Ensure database connection is correct
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 // Import routes
 const authRoutes = require("./routes/authRoutes");

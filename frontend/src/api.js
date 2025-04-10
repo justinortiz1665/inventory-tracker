@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://0.0.0.0:5001/api";
+const API_BASE_URL = window.location.hostname === "localhost" 
+  ? "http://localhost:5001/api"
+  : `https://${window.location.hostname}/api`;
 
 export const fetchInventory = async () => {
     try {
