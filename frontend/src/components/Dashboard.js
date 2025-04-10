@@ -1,7 +1,35 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { fetchInventory } from "../api";
 
 const Dashboard = () => {
+  const [inventoryData, setInventoryData] = useState([]);
+
+  useEffect(() => {
+    const getInventoryData = async () => {
+      const data = await fetchInventory();
+      setInventoryData(data);
+    };
+    getInventoryData();
+  }, []);
+
+  // Calculate low stock items
+  const lowStockItems = inventoryData
+    .filter(item => item.quantity <= item.min_threshold)
+    .slice(0, 3);
+
+  // Calculate category costs
+  const categoryCosts = inventoryData.reduce((acc, item) => {
+    const cost = item.price * item.quantity;
+    acc[item.category] = (acc[item.category] || 0) + cost;
+    return acc;
+  }, {});
+
+  // Get recent items (using the most recently added/updated items)
+  const recentItems = [...inventoryData]
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 3);
+
   return (
     <div className="dashboard-container">
       <h1 className="page-title">Dashboard Overview</h1>
@@ -9,40 +37,36 @@ const Dashboard = () => {
         <div className="dashboard-card">
           <h2 className="card-title">Low Stock Items</h2>
           <div className="alert-list">
-            <div className="alert-item warning">
-              <span>Printer Paper</span>
-              <span className="quantity">5 left</span>
-            </div>
-            <div className="alert-item critical">
-              <span>Ink Cartridges</span>
-              <span className="quantity">2 left</span>
-            </div>
+            {lowStockItems.map(item => (
+              <div key={item.id} className={item.quantity === 0 ? "alert-item critical" : "alert-item warning"}>
+                <span>{item.item_name}</span>
+                <span className="quantity">{item.quantity} {item.unit}</span>
+              </div>
+            ))}
           </div>
         </div>
         <div className="dashboard-card">
           <h2 className="card-title">Category Costs</h2>
           <div className="cost-list">
-            <div className="cost-item">
-              <span>Office Supplies</span>
-              <span className="cost">$2,450</span>
-            </div>
-            <div className="cost-item">
-              <span>Electronics</span>
-              <span className="cost">$5,230</span>
-            </div>
+            {Object.entries(categoryCosts).map(([category, cost]) => (
+              <div key={category} className="cost-item">
+                <span>{category}</span>
+                <span className="cost">${cost.toFixed(2)}</span>
+              </div>
+            ))}
           </div>
         </div>
         <div className="dashboard-card">
           <h2 className="card-title">Recent Transactions</h2>
           <div className="transaction-list">
-            <div className="transaction-item">
-              <span>Monitors → IT Dept</span>
-              <span className="date">Today</span>
-            </div>
-            <div className="transaction-item">
-              <span>Paper → HR Dept</span>
-              <span className="date">Yesterday</span>
-            </div>
+            {recentItems.map(item => (
+              <div key={item.id} className="transaction-item">
+                <span>{item.item_name} → {item.vendor}</span>
+                <span className="date">
+                  {new Date(item.created_at).toLocaleDateString()}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
