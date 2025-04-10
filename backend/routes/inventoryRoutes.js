@@ -68,6 +68,24 @@
     });
 
     // ✅ DELETE - Remove an inventory item
+    // Get categories with total costs
+    router.get("/categories/costs", async (req, res) => {
+        try {
+            const result = await pool.query(`
+                SELECT 
+                    category,
+                    SUM(price * quantity) as total_cost
+                FROM inventory 
+                GROUP BY category
+                ORDER BY total_cost DESC
+            `);
+            res.json(result.rows);
+        } catch (err) {
+            console.error("Error fetching category costs:", err);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    });
+
     router.delete("/:id", async (req, res) => {
         try {
             const { id } = req.params;

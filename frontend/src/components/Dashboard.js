@@ -18,12 +18,20 @@ const Dashboard = () => {
     .filter(item => item.quantity <= item.min_threshold)
     .slice(0, 3);
 
-  // Calculate category costs
-  const categoryCosts = inventoryData.reduce((acc, item) => {
-    const cost = item.price * item.quantity;
-    acc[item.category] = (acc[item.category] || 0) + cost;
-    return acc;
-  }, {});
+  const [categoryCosts, setCategoryCosts] = useState({});
+
+  useEffect(() => {
+    const getCategoryCosts = async () => {
+      const data = await fetchCategoryCosts();
+      // Convert array to object format for existing rendering
+      const costsObject = data.reduce((acc, item) => {
+        acc[item.category] = parseFloat(item.total_cost);
+        return acc;
+      }, {});
+      setCategoryCosts(costsObject);
+    };
+    getCategoryCosts();
+  }, []);
 
   // Get recent items (using the most recently added/updated items)
   const recentItems = [...inventoryData]

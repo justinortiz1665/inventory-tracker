@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5001/api"; // Update if deployed
+const API_BASE_URL = "http://0.0.0.0:5001/api";
 
 export const fetchInventory = async () => {
     try {
@@ -26,6 +26,16 @@ export const updateItem = async (id, itemData) => {
         await axios.put(`${API_BASE_URL}/inventory/${id}`, itemData);
     } catch (error) {
         console.error("Error updating item:", error);
+    }
+};
+
+export const fetchCategoryCosts = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/inventory/categories/costs`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching category costs:", error);
+        return [];
     }
 };
 
