@@ -33,18 +33,26 @@ export const updateItem = async (id, itemData) => {
 
 export const fetchDashboardData = async () => {
     try {
+        console.log('Fetching from:', API_BASE_URL);
         const [lowStock, categoryCosts, recentTransactions] = await Promise.all([
             axios.get(`${API_BASE_URL}/dashboard/low-stock`),
             axios.get(`${API_BASE_URL}/dashboard/category-costs`),
             axios.get(`${API_BASE_URL}/dashboard/recent-transactions`)
         ]);
-        return {
+        
+        const data = {
             lowStock: lowStock.data,
             categoryCosts: categoryCosts.data,
             recentTransactions: recentTransactions.data
         };
+        console.log('Dashboard data received:', data);
+        return data;
     } catch (error) {
         console.error("Error fetching dashboard data:", error);
+        if (error.response) {
+            console.error("Response data:", error.response.data);
+            console.error("Response status:", error.response.status);
+        }
         return { lowStock: [], categoryCosts: [], recentTransactions: [] };
     }
 };

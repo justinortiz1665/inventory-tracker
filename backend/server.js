@@ -18,9 +18,21 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 // Use the API Base URL from .env
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5001";
 
+// Enable CORS before routes
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
+// Mount routes
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
+// Debug route
+app.get("/api/test", (req, res) => {
+  res.json({ message: "API is working" });
+});
 
 app.get("/", (req, res) => {
     res.send("Inventory Tracker API is running...");
