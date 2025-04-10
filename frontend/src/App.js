@@ -1,18 +1,24 @@
+
 import React from "react";
-import InventoryList from "./components/InventoryList";
-import AddItemForm from "./components/AddItemForm";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./components/Dashboard";
+import MainInventory from "./components/MainInventory";
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Inventory Tracker</h1>
-      </header>
-      <main>
-        <AddItemForm />
-        <InventoryList />
-      </main>
-    </div>
+    <BrowserRouter>
+      <div className="app-container">
+        <Sidebar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/inventory" element={<MainInventory />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 
