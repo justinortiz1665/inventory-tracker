@@ -28,4 +28,10 @@ app.get("/", (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log('✅ Dashboard routes available at:');
+    console.log(`   - /api/dashboard/low-stock`);
+    console.log(`   - /api/dashboard/category-costs`);
+    console.log(`   - /api/dashboard/recent-transactions`);
+});

@@ -8,14 +8,34 @@ const Dashboard = () => {
     categoryCosts: [],
     recentTransactions: []
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getDashboardData = async () => {
-      const data = await fetchDashboardData();
-      setDashboardData(data);
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchDashboardData();
+        console.log('Dashboard data received:', data);
+        setDashboardData(data);
+      } catch (err) {
+        console.error('Error loading dashboard:', err);
+        setError('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
     };
     getDashboardData();
   }, []);
+
+  if (loading) {
+    return <div>Loading dashboard data...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   // Convert category costs array to object format for rendering
   const categoryCosts = dashboardData.categoryCosts.reduce((acc, item) => {
