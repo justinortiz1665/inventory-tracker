@@ -1,0 +1,39 @@
+ERROR
+fetchCategoryCosts is not defined
+ReferenceError: fetchCategoryCosts is not defined
+    at getCategoryCosts (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:55622:20)
+    at https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:55630:5
+    at commitHookEffectListMount (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:31738:30)
+    at commitPassiveMountOnFiber (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33231:17)
+    at commitPassiveMountEffects_complete (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33203:13)
+    at commitPassiveMountEffects_begin (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33193:11)
+    at commitPassiveMountEffects (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33183:7)
+    at flushPassiveEffectsImpl (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:35066:7)
+    at flushPassiveEffects (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:35019:18)
+    at https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:34834:13
+ERROR
+fetchCategoryCosts is not defined
+ReferenceError: fetchCategoryCosts is not defined
+    at getCategoryCosts (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:55622:20)
+    at https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:55630:5
+    at commitHookEffectListMount (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:31738:30)
+    at commitPassiveMountOnFiber (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33231:17)
+    at commitPassiveMountEffects_complete (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33203:13)
+    at commitPassiveMountEffects_begin (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33193:11)
+    at commitPassiveMountEffects (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33183:7)
+    at flushPassiveEffectsImpl (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:35066:7)
+    at flushPassiveEffects (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:35019:18)
+    at https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:34834:13
+ERROR
+fetchCategoryCosts is not defined
+ReferenceError: fetchCategoryCosts is not defined
+    at getCategoryCosts (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:55622:20)
+    at https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:55630:5
+    at commitHookEffectListMount (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:31738:30)
+    at invokePassiveEffectMountInDEV (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:33427:17)
+    at invokeEffectsInDev (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:35324:15)
+    at commitDoubleInvokeEffectsInDEV (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:35307:11)
+    at flushPassiveEffectsImpl (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:35080:9)
+    at flushPassiveEffects (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:35019:18)
+    at https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:34834:13
+    at workLoop (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:51005:38)
