@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { fetchInventory } from "../api";
+import { fetchInventory, fetchCategoryCosts } from "../api";
 
 const Dashboard = () => {
   const [inventoryData, setInventoryData] = useState([]);
