@@ -28,7 +28,11 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-console.log('🔍 Registered routes:', app._router.stack.map(r => r.route?.path).filter(Boolean));
+// Log all registered routes for debugging
+app.use((req, res, next) => {
+  console.log('📍 Incoming request:', req.method, req.url);
+  next();
+});
 
 // Debug route
 app.get("/api/test", (req, res) => {

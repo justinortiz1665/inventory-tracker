@@ -9,6 +9,7 @@ const getLowStockItems = async () => {
 };
 
 const getCategoryCosts = async () => {
+    console.log('🔍 Executing category costs query...');
     const { rows } = await pool.query(`
         SELECT 
             category,

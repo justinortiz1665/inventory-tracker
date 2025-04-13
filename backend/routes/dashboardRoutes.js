@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { getLowStockItems, getCategoryCosts, getRecentTransactions } = require("../models/dashboardModel");
+const dashboardModel = require("../models/dashboardModel");
 
 // Get low stock items
 router.get("/low-stock", async (req, res) => {
     try {
         console.log('Fetching low stock items...');
-        const result = await getLowStockItems();
+        const result = await dashboardModel.getLowStockItems();
         console.log(`Found ${result.length} low stock items`);
         res.json(result);
     } catch (err) {
@@ -19,7 +19,7 @@ router.get("/low-stock", async (req, res) => {
 router.get("/category-costs", async (req, res) => {
     try {
         console.log('📊 Fetching category costs...');
-        const result = await getCategoryCosts();
+        const result = await dashboardModel.getCategoryCosts();
         console.log('📊 Category costs result:', result);
         res.json(result);
     } catch (err) {
@@ -32,7 +32,7 @@ router.get("/category-costs", async (req, res) => {
 router.get("/recent-transactions", async (req, res) => {
     try {
         console.log('Fetching recent transactions...');
-        const result = await getRecentTransactions();
+        const result = await dashboardModel.getRecentTransactions();
         console.log(`Found ${result.length} recent transactions`);
         res.json(result);
     } catch (err) {
