@@ -18,7 +18,7 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 // Use the API Base URL from .env
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5001";
 
-// Enable CORS before routes
+// Enable CORS
 app.use(cors({
   origin: true,
   credentials: true
@@ -27,19 +27,26 @@ app.use(cors({
 // Debug middleware - log all requests before routing
 app.use((req, res, next) => {
   console.log('📍 Incoming request:', req.method, req.url);
-  console.log('📍 Request headers:', req.headers);
   next();
 });
 
-// Mount routes
+// Mount routes with better error handling
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-// Debug after routes - catch unmatched routes
-app.use((req, res, next) => {
-  console.log('❌ No route matched for:', req.method, req.url);
-  next();
+// Handle 404s for API routes
+app.use('/api/*', (req, res) => {
+  console.log('❌ API route not found:', req.method, req.url);
+  res.status(404).json({ error: 'API endpoint not found' });
+});
+
+// Serve static frontend in production
+app.use(express.static('public'));
+
+// Handle other routes for SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Debug route
