@@ -24,13 +24,21 @@ app.use(cors({
   credentials: true
 }));
 
+// Debug middleware - log all requests before routing
+app.use((req, res, next) => {
+  console.log('📍 Incoming request:', req.method, req.url);
+  console.log('📍 Request headers:', req.headers);
+  next();
+});
+
 // Mount routes
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-// Log all registered routes for debugging
+app.use("/api/dashboard", dashboardRoutes);
+
+// Debug after routes - catch unmatched routes
 app.use((req, res, next) => {
-  console.log('📍 Incoming request:', req.method, req.url);
+  console.log('❌ No route matched for:', req.method, req.url);
   next();
 });
 

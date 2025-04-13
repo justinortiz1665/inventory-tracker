@@ -2,8 +2,12 @@ const express = require("express");
 const router = express.Router();
 const dashboardModel = require("../models/dashboardModel");
 
+// Debug route registration
+console.log('📝 Registering dashboard routes...');
+
 // Get low stock items
 router.get("/low-stock", async (req, res) => {
+    console.log('🔍 Attempting to fetch low stock items...');
     try {
         console.log('Fetching low stock items...');
         const result = await dashboardModel.getLowStockItems();
