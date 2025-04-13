@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
 const pool = require("./database"); // Ensure database connection is correct
 
 const app = express();
