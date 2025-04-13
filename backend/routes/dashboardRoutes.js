@@ -5,12 +5,6 @@ const dashboardModel = require("../models/dashboardModel");
 // Debug route registration
 console.log('📝 Registering dashboard routes...');
 
-// Debug middleware for this router
-router.use((req, res, next) => {
-    console.log('🎯 Dashboard Route accessed:', req.method, req.baseUrl + req.path);
-    next();
-});
-
 // Get low stock items
 router.get("/low-stock", async (req, res) => {
     console.log('🔍 Attempting to fetch low stock items...');
