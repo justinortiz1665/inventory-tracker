@@ -18,12 +18,12 @@ router.get("/low-stock", async (req, res) => {
 // Get category costs
 router.get("/category-costs", async (req, res) => {
     try {
-        console.log('Calculating category costs...');
+        console.log('📊 Fetching category costs...');
         const result = await getCategoryCosts();
-        console.log(`Found costs for ${result.length} categories`);
+        console.log('📊 Category costs result:', result);
         res.json(result);
     } catch (err) {
-        console.error("Error fetching category costs:", err);
+        console.error('❌ Error in category costs:', err);
         res.status(500).json({ error: "Internal server error", details: err.message });
     }
 });

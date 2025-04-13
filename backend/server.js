@@ -27,7 +27,8 @@ app.use(cors({
 // Mount routes
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+console.log('🔍 Registered routes:', app._router.stack.map(r => r.route?.path).filter(Boolean));
 
 // Debug route
 app.get("/api/test", (req, res) => {
