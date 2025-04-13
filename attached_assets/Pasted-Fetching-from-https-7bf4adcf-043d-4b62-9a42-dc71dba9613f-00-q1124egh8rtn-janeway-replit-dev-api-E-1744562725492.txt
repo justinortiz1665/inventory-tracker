@@ -1,0 +1,26 @@
+Fetching from: https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/api
+Error fetching dashboard data: 
+AxiosError {message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, …}
+code: "ERR_BAD_REQUEST"
+config: Object
+message: "Request failed with status code 404"
+name: "AxiosError"
+request: XMLHttpRequest
+response: Object
+config: Object
+data: "<!DOCTYPE html>↵<html lang="en">↵<head>↵<meta charset="utf-8">↵<title>Error</title>↵</head>↵<body>↵<pre>Cannot GET /api/dashboard/low-stock</pre>↵</body>↵</html>↵"
+headers: AxiosHeaders
+request: XMLHttpRequest
+status: 404
+statusText: "Not Found"
+[[Prototype]]: Object
+status: 404
+stack: "AxiosError: Request failed with status code 404↵ at settle (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:2176:12)↵ at XMLHttpRequest.onloadend (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:823:66)↵ at Axios.request (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:1322:41)↵ at async Promise.all (index 0)↵ at async fetchDashboardData (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:55401:59)↵ at async getDashboardData (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/static/js/bundle.js:55635:22)"
+get stack: ƒ ()
+set stack: ƒ ()
+[[Prototype]]: Object
+
+at t.value (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://7bf4adcf-043d-4b62-9a42-dc71dba9613f-00-q1124egh8rtn.janeway.replit.dev/__replco/static/devto
