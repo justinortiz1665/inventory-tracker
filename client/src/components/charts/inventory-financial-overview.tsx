@@ -2,18 +2,17 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DateRange } from "react-day-picker";
 import { format, subMonths } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 export default function InventoryFinancialOverview() {
-  // Default date range: Last 3 months to today
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: subMonths(new Date(), 3),
-    to: new Date(),
-  });
+  // Default dates: From = 3 months ago, To = today
+  const [fromDate, setFromDate] = useState<Date | undefined>(subMonths(new Date(), 3));
+  const [toDate, setToDate] = useState<Date | undefined>(new Date());
 
   // Fetch inventory items
   const { data: items = [], isLoading } = useQuery({
@@ -73,24 +72,59 @@ export default function InventoryFinancialOverview() {
           </CardDescription>
         </div>
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            className="h-8 border-dashed"
-            size="sm"
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )
-            ) : (
-              <span>Pick a date range</span>
-            )}
-          </Button>
+          <div className="flex space-x-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="h-8 border-dashed"
+                  size="sm"
+                >
+                  <CalendarIcon className="mr-2 h-3 w-3" />
+                  <span>From: </span>
+                  {fromDate ? (
+                    <span>{format(fromDate, "MMM dd, yyyy")}</span>
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={fromDate}
+                  onSelect={setFromDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+            
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="h-8 border-dashed"
+                  size="sm"
+                >
+                  <CalendarIcon className="mr-2 h-3 w-3" />
+                  <span>To: </span>
+                  {toDate ? (
+                    <span>{format(toDate, "MMM dd, yyyy")}</span>
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={toDate}
+                  onSelect={setToDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
