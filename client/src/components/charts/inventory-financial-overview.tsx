@@ -343,15 +343,48 @@ export default function InventoryFinancialOverview() {
                     <Calendar
                       mode="single"
                       selected={toDate}
-                      onSelect={setToDate}
+                      onSelect={(date) => {
+                        if (date) {
+                          setToDate(date);
+                          setViewDate(date);
+                        }
+                      }}
+                      month={viewDate}
+                      onMonthChange={setViewDate}
                       initialFocus
+                      className="p-0"
                       classNames={{
-                        caption_label: "text-sm font-medium",
+                        caption_label: "hidden", // Hide the default caption
                         cell: "text-sm p-0 relative focus-within:relative focus-within:z-20",
                         day: "h-8 w-8 p-0 font-normal",
                         head_cell: "text-xs font-normal",
-                        nav_button: "h-6 w-6",
-                        table: "w-full border-collapse"
+                        nav_button: "invisible h-0 w-0", // Hide default nav buttons
+                        table: "w-full border-collapse",
+                        caption: "relative flex justify-between pt-1 pb-2",
+                      }}
+                      components={{
+                        Caption: ({ displayMonth }) => (
+                          <div className="flex justify-between items-center w-full pt-1 pb-2">
+                            <button 
+                              onClick={() => handleMonthChange("prev")}
+                              className="p-1 rounded hover:bg-gray-200 text-xs"
+                            >
+                              &lt;
+                            </button>
+                            <button 
+                              onClick={handleHeaderClick} 
+                              className="font-medium hover:bg-gray-100 px-2 py-1 rounded text-sm"
+                            >
+                              {format(viewDate, "MMMM yyyy")}
+                            </button>
+                            <button 
+                              onClick={() => handleMonthChange("next")}
+                              className="p-1 rounded hover:bg-gray-200 text-xs"
+                            >
+                              &gt;
+                            </button>
+                          </div>
+                        )
                       }}
                     />
                     <div className="p-2 border-t border-gray-200">
