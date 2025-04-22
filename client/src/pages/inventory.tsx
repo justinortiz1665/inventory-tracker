@@ -108,7 +108,7 @@ export default function Inventory() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Inventory Management</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Main Inventory</h1>
       </div>
       
       <div className="mb-6 relative">
