@@ -29,7 +29,7 @@ export default function Transactions() {
     queryKey: ['/api/transactions'],
   });
 
-  // Fetch inventory items for dropdown
+  // Fetch inventory items for displaying item names
   const { 
     data: inventoryItems = [],
     isLoading: isLoadingItems 
@@ -37,7 +37,7 @@ export default function Transactions() {
     queryKey: ['/api/inventory'],
   });
 
-  // Fetch facilities for dropdown
+  // Fetch facilities for displaying facility names
   const { 
     data: facilities = [],
     isLoading: isLoadingFacilities 
@@ -118,9 +118,7 @@ export default function Transactions() {
                         {isLoadingFacilities ? '...' : 
                           transaction.fromFacilityId ? 
                             <Link href={`/facilities/${transaction.fromFacilityId}`}>
-                              <a className="text-blue-600 hover:underline">
-                                {getFacilityName(transaction.fromFacilityId)}
-                              </a>
+                              {getFacilityName(transaction.fromFacilityId)}
                             </Link> : 
                             'Main Inventory'
                         }
@@ -129,9 +127,7 @@ export default function Transactions() {
                         {isLoadingFacilities ? '...' : 
                           transaction.toFacilityId ? 
                             <Link href={`/facilities/${transaction.toFacilityId}`}>
-                              <a className="text-blue-600 hover:underline">
-                                {getFacilityName(transaction.toFacilityId)}
-                              </a>
+                              {getFacilityName(transaction.toFacilityId)}
                             </Link> : 
                             'Main Inventory'
                         }
@@ -147,8 +143,6 @@ export default function Transactions() {
           )}
         </CardContent>
       </Card>
-      
-
     </div>
   );
 }
