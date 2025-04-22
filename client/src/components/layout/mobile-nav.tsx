@@ -34,12 +34,15 @@ export default function MobileNav() {
                   </div>
                   <nav className="flex-1 px-2 py-4 space-y-1">
                     {navItems.map((item) => (
-                      <Link 
-                        key={item.href} 
-                        href={item.href} 
-                        onClick={() => setIsOpen(false)}
+                      <div
+                        key={item.href}
+                        className="cursor-pointer"
+                        onClick={() => {
+                          setIsOpen(false);
+                          window.location.href = item.href;
+                        }}
                       >
-                        <a 
+                        <div 
                           className={cn(
                             "flex items-center px-4 py-2 text-sm font-medium rounded-md",
                             location === item.href 
@@ -49,8 +52,8 @@ export default function MobileNav() {
                         >
                           {item.icon}
                           <span className="ml-3">{item.label}</span>
-                        </a>
-                      </Link>
+                        </div>
+                      </div>
                     ))}
                   </nav>
                   <div className="p-4 border-t border-gray-700">
@@ -83,15 +86,17 @@ export default function MobileNav() {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-10 bg-white border-t border-gray-200">
         <div className="flex justify-around">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <a className={cn(
-                "flex flex-col items-center py-2 px-3",
+            <div 
+              key={item.href} 
+              className={cn(
+                "flex flex-col items-center py-2 px-3 cursor-pointer",
                 location === item.href ? "text-blue-500" : "text-gray-600"
-              )}>
-                {item.icon}
-                <span className="text-xs mt-1">{item.label}</span>
-              </a>
-            </Link>
+              )}
+              onClick={() => window.location.href = item.href}
+            >
+              {item.icon}
+              <span className="text-xs mt-1">{item.label}</span>
+            </div>
           ))}
         </div>
       </nav>

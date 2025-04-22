@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Package2, AlertTriangle, Ban, Tag } from "lucide-react";
+import { Link } from "wouter";
 import StatCard from "@/components/stats/stat-card";
 import InventoryChart from "@/components/charts/inventory-chart";
 import ActivityList from "@/components/inventory/activity-list";
@@ -66,9 +67,9 @@ export default function Dashboard() {
       <div className="mt-8">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-gray-800">Recent Inventory</h2>
-          <a href="/inventory" className="text-blue-500 text-sm hover:underline">
+          <Link href="/inventory" className="text-blue-500 text-sm hover:underline">
             View all inventory
-          </a>
+          </Link>
         </div>
         <div className="mt-4">
           {isStatsLoading ? (
