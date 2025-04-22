@@ -85,7 +85,7 @@ export default function FacilityDetail() {
 
   // Fetch facility details
   const { 
-    data: facility, 
+    data: facility = {}, 
     isLoading: isLoadingFacility,
     isError: isFacilityError,
     error: facilityError
@@ -96,7 +96,7 @@ export default function FacilityDetail() {
 
   // Fetch facility inventory
   const { 
-    data: facilityInventory, 
+    data: facilityInventory = [], 
     isLoading: isLoadingInventory,
     isError: isInventoryError,
     error: inventoryError
@@ -107,7 +107,7 @@ export default function FacilityDetail() {
 
   // Fetch facility stats
   const { 
-    data: facilityStats, 
+    data: facilityStats = {}, 
     isLoading: isLoadingStats,
   } = useQuery({
     queryKey: ['/api/facilities', facilityId, 'stats'],
@@ -116,7 +116,7 @@ export default function FacilityDetail() {
 
   // Fetch facility activity logs
   const { 
-    data: activityLogs, 
+    data: activityLogs = [], 
     isLoading: isLoadingLogs,
   } = useQuery({
     queryKey: ['/api/facilities', facilityId, 'activity'],
@@ -126,7 +126,7 @@ export default function FacilityDetail() {
 
   // Fetch inventory items for dropdown
   const { 
-    data: inventoryItems,
+    data: inventoryItems = [],
     isLoading: isLoadingItems 
   } = useQuery({
     queryKey: ['/api/inventory'],

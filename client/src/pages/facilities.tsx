@@ -76,7 +76,7 @@ export default function Facilities() {
   
   // Fetch facilities
   const { 
-    data: facilities, 
+    data: facilities = [], 
     isLoading,
     isError,
     error

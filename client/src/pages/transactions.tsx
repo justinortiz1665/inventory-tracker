@@ -86,7 +86,7 @@ export default function Transactions() {
 
   // Fetch transactions
   const { 
-    data: transactions, 
+    data: transactions = [], 
     isLoading: isLoadingTransactions,
     isError: isTransactionsError,
     error: transactionsError
@@ -96,7 +96,7 @@ export default function Transactions() {
 
   // Fetch inventory items for dropdown
   const { 
-    data: inventoryItems,
+    data: inventoryItems = [],
     isLoading: isLoadingItems 
   } = useQuery({
     queryKey: ['/api/inventory'],
@@ -104,7 +104,7 @@ export default function Transactions() {
 
   // Fetch facilities for dropdown
   const { 
-    data: facilities,
+    data: facilities = [],
     isLoading: isLoadingFacilities 
   } = useQuery({
     queryKey: ['/api/facilities'],
