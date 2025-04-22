@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, ShoppingCart, Search, SlidersHorizontal } from "lucide-react";
+import { Plus, ShoppingCart, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -158,10 +158,6 @@ export default function Inventory() {
               </SelectContent>
             </Select>
           </div>
-
-          <Button variant="outline" className="md:w-auto h-10" size="icon">
-            <SlidersHorizontal className="h-4 w-4" />
-          </Button>
         </div>
         
         <Link href="/transactions">
