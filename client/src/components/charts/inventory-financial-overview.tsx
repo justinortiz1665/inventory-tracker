@@ -99,31 +99,45 @@ export default function InventoryFinancialOverview() {
               </PopoverContent>
             </Popover>
             
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="h-8 border-dashed"
-                  size="sm"
-                >
-                  <CalendarIcon className="mr-2 h-3 w-3" />
-                  <span>To: </span>
-                  {toDate ? (
-                    <span>{format(toDate, "MMM dd, yyyy")}</span>
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={toDate}
-                  onSelect={setToDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <div className="flex flex-col space-y-1">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="h-8 border-dashed"
+                    size="sm"
+                  >
+                    <CalendarIcon className="mr-2 h-3 w-3" />
+                    <span>To: </span>
+                    {toDate ? (
+                      <span>{format(toDate, "MMM dd, yyyy")}</span>
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <div className="flex flex-col">
+                    <Calendar
+                      mode="single"
+                      selected={toDate}
+                      onSelect={setToDate}
+                      initialFocus
+                    />
+                    <div className="p-2 border-t border-gray-200">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full"
+                        onClick={() => setToDate(new Date())}
+                      >
+                        Today
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         </div>
       </CardHeader>
