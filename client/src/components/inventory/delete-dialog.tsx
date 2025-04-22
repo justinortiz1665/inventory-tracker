@@ -8,7 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface DeleteDialogProps {
   isOpen: boolean;
@@ -26,29 +27,31 @@ export default function DeleteDialog({
   itemName,
 }: DeleteDialogProps) {
   return (
-    <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-red-500" />
-            <AlertDialogTitle>Delete Item</AlertDialogTitle>
-          </div>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete <span className="font-semibold">{itemName}</span>? This action cannot be undone.
+            This will permanently delete <span className="font-semibold">{itemName}</span> from your inventory. 
+            This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={(e) => {
-              e.preventDefault();
-              onConfirm();
-            }}
+          <Button 
+            variant="destructive" 
+            onClick={onConfirm} 
             disabled={isDeleting}
-            className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
           >
-            {isDeleting ? "Deleting..." : "Delete"}
-          </AlertDialogAction>
+            {isDeleting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Deleting...
+              </>
+            ) : (
+              "Delete"
+            )}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

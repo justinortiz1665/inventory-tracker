@@ -1,17 +1,12 @@
-import { 
-  Card, 
-  CardContent 
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Label } from "@/components/ui/label";
 
 interface InventoryFiltersProps {
   searchQuery: string;
@@ -31,67 +26,73 @@ export default function InventoryFilters({
   setCategoryFilter,
   sortOrder,
   setSortOrder,
-  categories,
+  categories = [],
   isCategoriesLoading
 }: InventoryFiltersProps) {
   return (
-    <Card className="mt-4">
-      <CardContent className="p-4">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-gray-400" />
-            </div>
-            <Input
-              type="text"
-              placeholder="Search items..."
-              className="pl-10 pr-4"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          
-          <Select 
-            value={categoryFilter} 
-            onValueChange={setCategoryFilter}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
-              {isCategoriesLoading ? (
-                <div className="p-2">
-                  <Skeleton className="h-5 w-full" />
-                  <Skeleton className="h-5 w-full mt-2" />
-                  <Skeleton className="h-5 w-full mt-2" />
-                </div>
-              ) : (
-                categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
-                ))
-              )}
-            </SelectContent>
-          </Select>
-          
-          <Select 
-            value={sortOrder} 
-            onValueChange={setSortOrder}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sort by Name" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="name">Sort by Name</SelectItem>
-              <SelectItem value="stock">Sort by Stock Level</SelectItem>
-              <SelectItem value="date">Sort by Date Added</SelectItem>
-              <SelectItem value="price">Sort by Price</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-4 md:flex-row">
+      <div className="flex-1">
+        <Label htmlFor="search" className="mb-2 block">
+          Search
+        </Label>
+        <Input
+          id="search"
+          placeholder="Search by name or SKU"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full"
+        />
+      </div>
+      
+      <div className="w-full md:w-56">
+        <Label htmlFor="category" className="mb-2 block">
+          Category
+        </Label>
+        <Select
+          value={categoryFilter}
+          onValueChange={setCategoryFilter}
+        >
+          <SelectTrigger id="category">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">All Categories</SelectItem>
+            {isCategoriesLoading ? (
+              <SelectItem value="loading-categories">Loading...</SelectItem>
+            ) : (
+              categories.map((category) => (
+                <SelectItem key={category.id} value={category.id.toString()}>
+                  {category.name}
+                </SelectItem>
+              ))
+            )}
+          </SelectContent>
+        </Select>
+      </div>
+      
+      <div className="w-full md:w-56">
+        <Label htmlFor="sort" className="mb-2 block">
+          Sort By
+        </Label>
+        <Select
+          value={sortOrder}
+          onValueChange={setSortOrder}
+        >
+          <SelectTrigger id="sort">
+            <SelectValue placeholder="Sort order" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="name-asc">Name (A-Z)</SelectItem>
+            <SelectItem value="name-desc">Name (Z-A)</SelectItem>
+            <SelectItem value="price-asc">Price (Low-High)</SelectItem>
+            <SelectItem value="price-desc">Price (High-Low)</SelectItem>
+            <SelectItem value="stock-asc">Stock (Low-High)</SelectItem>
+            <SelectItem value="stock-desc">Stock (High-Low)</SelectItem>
+            <SelectItem value="newest">Newest First</SelectItem>
+            <SelectItem value="oldest">Oldest First</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
   );
 }

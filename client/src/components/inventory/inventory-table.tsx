@@ -6,12 +6,16 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { 
-  Pencil, 
-  Trash2
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { 
+  Edit, 
+  Trash2,
+  ImageOff,
+  ExternalLink 
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { formatCurrency } from "@/lib/utils";
+import { Link } from "wouter";
 
 interface InventoryItem {
   id: number;
@@ -30,78 +34,85 @@ interface InventoryTableProps {
 }
 
 export default function InventoryTable({ items, onEdit, onDelete }: InventoryTableProps) {
-  // Function to get stock status badge
-  const getStockStatusBadge = (stock: number) => {
-    if (stock === 0) {
-      return <Badge variant="destructive">Out of Stock</Badge>;
-    } else if (stock <= 5) {
-      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">Low Stock</Badge>;
+  // Helper function to determine stock status
+  const getStockStatus = (stock: number) => {
+    if (stock <= 0) {
+      return { label: 'Out of Stock', color: 'bg-red-100 text-red-800' };
+    } else if (stock < 10) {
+      return { label: 'Low Stock', color: 'bg-yellow-100 text-yellow-800' };
     } else {
-      return <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">In Stock</Badge>;
+      return { label: 'In Stock', color: 'bg-green-100 text-green-800' };
     }
   };
 
-  // Function to format price
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(price);
-  };
-
-  // Placeholder image for items without image
-  const placeholderImage = "https://via.placeholder.com/40x40";
-
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Image</TableHead>
+          <TableHead>Name</TableHead>
+          <TableHead>SKU</TableHead>
+          <TableHead>Price</TableHead>
+          <TableHead>Stock</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {items.length === 0 ? (
           <TableRow>
-            <TableHead className="pl-6">Item</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Stock</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right pr-6">Actions</TableHead>
+            <TableCell colSpan={6} className="h-24 text-center">
+              No inventory items found.
+            </TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          {items.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center">
-                No inventory items found.
-              </TableCell>
-            </TableRow>
-          ) : (
-            items.map((item) => (
+        ) : (
+          items.map((item) => {
+            const stockStatus = getStockStatus(item.stock);
+            
+            return (
               <TableRow key={item.id}>
-                <TableCell className="pl-6">
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 flex-shrink-0">
-                      <img 
-                        src={item.imageUrl || placeholderImage} 
-                        alt={item.name} 
-                        className="h-10 w-10 rounded-md object-cover"
+                <TableCell>
+                  {item.imageUrl ? (
+                    <div className="h-12 w-12 rounded-md overflow-hidden">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="h-full w-full object-cover"
                       />
                     </div>
-                    <div className="ml-4">
-                      <div className="font-medium text-gray-900">{item.name}</div>
-                      <div className="text-gray-500 text-xs">SKU: {item.sku}</div>
+                  ) : (
+                    <div className="h-12 w-12 bg-gray-100 rounded-md flex items-center justify-center">
+                      <ImageOff className="h-5 w-5 text-gray-400" />
                     </div>
+                  )}
+                </TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex flex-col">
+                    <span>{item.name}</span>
+                    <Link href={`/inventory/${item.id}`} className="text-xs text-blue-600 flex items-center hover:underline">
+                      View Details <ExternalLink className="ml-1 h-3 w-3" />
+                    </Link>
                   </div>
                 </TableCell>
-                <TableCell>{item.categoryId}</TableCell>
-                <TableCell>{item.stock}</TableCell>
-                <TableCell>{formatPrice(item.price)}</TableCell>
-                <TableCell>{getStockStatusBadge(item.stock)}</TableCell>
-                <TableCell className="text-right pr-6">
+                <TableCell>
+                  <code className="bg-gray-100 px-2 py-1 rounded text-sm">{item.sku}</code>
+                </TableCell>
+                <TableCell>{formatCurrency(item.price)}</TableCell>
+                <TableCell>
+                  <div className="flex items-center space-x-2">
+                    <span>{item.stock}</span>
+                    <Badge variant="outline" className={stockStatus.color}>
+                      {stockStatus.label}
+                    </Badge>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => onEdit(item)}
                     className="text-blue-600 hover:text-blue-900 mr-1"
                   >
-                    <Pencil className="h-4 w-4" />
+                    <Edit className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="ghost"
@@ -113,10 +124,10 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                   </Button>
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </div>
+            );
+          })
+        )}
+      </TableBody>
+    </Table>
   );
 }
