@@ -103,33 +103,33 @@ export default function InventoryFinancialOverview() {
   const MonthView = () => {
     const months = getMonthsInYear(viewDate);
     return (
-      <div className="p-3">
-        <div className="flex justify-between items-center mb-4">
+      <div className="p-2">
+        <div className="flex justify-between items-center mb-2">
           <button 
             onClick={() => handleYearChange("prev")}
-            className="p-1 rounded hover:bg-gray-200"
+            className="p-1 rounded hover:bg-gray-200 text-xs"
           >
             &lt;
           </button>
           <button 
             onClick={handleHeaderClick} 
-            className="font-bold hover:bg-gray-100 px-2 py-1 rounded"
+            className="font-medium hover:bg-gray-100 px-2 py-1 rounded text-sm"
           >
             {viewDate.getFullYear()}
           </button>
           <button 
             onClick={() => handleYearChange("next")}
-            className="p-1 rounded hover:bg-gray-200"
+            className="p-1 rounded hover:bg-gray-200 text-xs"
           >
             &gt;
           </button>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1">
           {months.map((m) => (
             <button
               key={m.month}
               onClick={() => handleMonthSelect(m.month)}
-              className="p-2 rounded hover:bg-gray-100 text-center"
+              className="py-1 px-2 rounded hover:bg-gray-100 text-center text-xs"
             >
               {m.name}
             </button>
@@ -146,33 +146,33 @@ export default function InventoryFinancialOverview() {
     const decadeEnd = decade[decade.length - 1];
     
     return (
-      <div className="p-3">
-        <div className="flex justify-between items-center mb-4">
+      <div className="p-2">
+        <div className="flex justify-between items-center mb-2">
           <button 
             onClick={() => handleDecadeChange("prev")}
-            className="p-1 rounded hover:bg-gray-200"
+            className="p-1 rounded hover:bg-gray-200 text-xs"
           >
             &lt;
           </button>
           <button 
             onClick={handleHeaderClick} 
-            className="font-bold hover:bg-gray-100 px-2 py-1 rounded"
+            className="font-medium hover:bg-gray-100 px-2 py-1 rounded text-sm"
           >
             {decadeStart} - {decadeEnd}
           </button>
           <button 
             onClick={() => handleDecadeChange("next")}
-            className="p-1 rounded hover:bg-gray-200"
+            className="p-1 rounded hover:bg-gray-200 text-xs"
           >
             &gt;
           </button>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-1">
           {decade.map((year) => (
             <button
               key={year}
               onClick={() => handleYearSelect(year)}
-              className="p-2 rounded hover:bg-gray-100 text-center"
+              className="py-1 px-1 rounded hover:bg-gray-100 text-center text-xs"
             >
               {year}
             </button>
@@ -242,26 +242,26 @@ export default function InventoryFinancialOverview() {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-0" align="start" side="bottom" sideOffset={4}>
                 {calendarView === "day" && (
                   <div className="flex flex-col">
-                    <div className="p-3">
-                      <div className="flex justify-between items-center mb-2">
+                    <div className="p-2">
+                      <div className="flex justify-between items-center mb-1">
                         <button 
                           onClick={() => handleMonthChange("prev")}
-                          className="p-1 rounded hover:bg-gray-200"
+                          className="p-1 rounded hover:bg-gray-200 text-xs"
                         >
                           &lt;
                         </button>
                         <button 
                           onClick={handleHeaderClick} 
-                          className="font-bold hover:bg-gray-100 px-2 py-1 rounded"
+                          className="font-medium hover:bg-gray-100 px-2 py-1 rounded text-sm"
                         >
                           {format(viewDate, "MMMM yyyy")}
                         </button>
                         <button 
                           onClick={() => handleMonthChange("next")}
-                          className="p-1 rounded hover:bg-gray-200"
+                          className="p-1 rounded hover:bg-gray-200 text-xs"
                         >
                           &gt;
                         </button>
@@ -279,6 +279,14 @@ export default function InventoryFinancialOverview() {
                         onMonthChange={setViewDate}
                         initialFocus
                         className="p-0"
+                        classNames={{
+                          caption_label: "text-sm font-medium",
+                          cell: "text-sm p-0 relative focus-within:relative focus-within:z-20",
+                          day: "h-8 w-8 p-0 font-normal",
+                          head_cell: "text-xs font-normal",
+                          nav_button: "h-6 w-6",
+                          table: "w-full border-collapse",
+                        }}
                       />
                     </div>
                   </div>
@@ -325,13 +333,21 @@ export default function InventoryFinancialOverview() {
                     )}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0" align="start" side="bottom" sideOffset={4}>
                   <div className="flex flex-col">
                     <Calendar
                       mode="single"
                       selected={toDate}
                       onSelect={setToDate}
                       initialFocus
+                      classNames={{
+                        caption_label: "text-sm font-medium",
+                        cell: "text-sm p-0 relative focus-within:relative focus-within:z-20",
+                        day: "h-8 w-8 p-0 font-normal",
+                        head_cell: "text-xs font-normal",
+                        nav_button: "h-6 w-6",
+                        table: "w-full border-collapse",
+                      }}
                     />
                     <div className="p-2 border-t border-gray-200">
                       <Button 
