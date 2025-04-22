@@ -29,7 +29,7 @@ export default function Dashboard() {
       </div>
 
       {/* Action Buttons */}
-      <div className="mt-4 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap gap-3 sticky top-0 bg-background z-10 py-2">
         <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Add Item
