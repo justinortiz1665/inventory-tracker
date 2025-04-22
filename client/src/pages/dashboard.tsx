@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Package2, AlertTriangle, Ban, Plus, DollarSign } from "lucide-react";
-import { Link } from "wouter";
+import { AlertTriangle, Ban, Plus } from "lucide-react";
 import StatCard from "@/components/stats/stat-card";
 import ActivityList from "@/components/inventory/activity-list";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import ItemFormDialog from "@/components/inventory/item-form-dialog";
 import CategoryPieChart from "@/components/charts/category-pie-chart";
 import InventoryFinancialOverview from "@/components/charts/inventory-financial-overview";
-import { formatCurrency } from "@/lib/utils";
 
 export default function Dashboard() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -21,21 +18,6 @@ export default function Dashboard() {
   const { data: categories, isLoading: isCategoriesLoading } = useQuery({
     queryKey: ['/api/categories'],
   });
-
-  const { data: inventoryItems = [], isLoading: isInventoryLoading } = useQuery({
-    queryKey: ['/api/inventory'],
-  });
-
-  // Calculate total inventory value
-  const getTotalInventoryValue = () => {
-    if (!inventoryItems.length) return 0;
-    
-    return inventoryItems.reduce((total: number, item: any) => {
-      return total + (item.price * item.stock);
-    }, 0);
-  };
-
-  const totalValue = getTotalInventoryValue();
 
   return (
     <div>
@@ -84,30 +66,6 @@ export default function Dashboard() {
       {/* Recent Activity */}
       <div className="mt-8">
         <ActivityList />
-      </div>
-
-      {/* Recent Inventory Preview */}
-      <div className="mt-8">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-gray-800">Recent Inventory</h2>
-          <Link href="/inventory" className="text-blue-500 text-sm hover:underline">
-            View all inventory
-          </Link>
-        </div>
-        <div className="mt-4">
-          {isStatsLoading ? (
-            <div className="space-y-4">
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <Package2 className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-              <p>No recent inventory items to display</p>
-            </div>
-          )}
-        </div>
       </div>
       
       {/* Add Item Dialog */}
