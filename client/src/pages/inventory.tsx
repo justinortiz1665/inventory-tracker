@@ -105,18 +105,13 @@ export default function Inventory() {
       </div>
 
       <div className="flex justify-between items-center mt-6">
-        <div>
-          <Link href="/transactions">
-            <Button>
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              Check Out
-            </Button>
-          </Link>
-        </div>
-        <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Item
-        </Button>
+        <div></div>
+        <Link href="/transactions">
+          <Button>
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            Check Out
+          </Button>
+        </Link>
       </div>
 
       <div className="mt-4">

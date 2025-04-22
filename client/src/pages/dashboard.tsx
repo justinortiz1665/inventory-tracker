@@ -1,21 +1,36 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Package2, AlertTriangle, Ban, Tag } from "lucide-react";
+import { Package2, AlertTriangle, Ban, Tag, Plus } from "lucide-react";
 import { Link } from "wouter";
 import StatCard from "@/components/stats/stat-card";
 import InventoryChart from "@/components/charts/inventory-chart";
 import ActivityList from "@/components/inventory/activity-list";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import ItemFormDialog from "@/components/inventory/item-form-dialog";
 
 export default function Dashboard() {
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  
   const { data: stats, isLoading: isStatsLoading } = useQuery({
     queryKey: ['/api/stats'],
+  });
+  
+  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
+    queryKey: ['/api/categories'],
   });
 
   return (
     <div>
-      <div className="py-4">
-        <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-600">Monitor your inventory health and key metrics</p>
+      <div className="py-4 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
+          <p className="mt-1 text-sm text-gray-600">Monitor your inventory health and key metrics</p>
+        </div>
+        <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Add Item
+        </Button>
       </div>
 
       {/* Stats Cards */}
@@ -86,6 +101,14 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+      
+      {/* Add Item Dialog */}
+      <ItemFormDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        categories={categories || []}
+        title="Add New Item"
+      />
     </div>
   );
 }
