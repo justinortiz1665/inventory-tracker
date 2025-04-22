@@ -60,18 +60,18 @@ export default function Sidebar({ className }: SidebarProps) {
       <div className="flex flex-col flex-grow overflow-y-auto">
         <nav className="flex-1 px-2 py-4 space-y-1">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <a
-                className={cn(
-                  "flex items-center px-4 py-2 text-sm font-medium rounded-md",
-                  location === item.href 
-                    ? "bg-gray-900 text-white" 
-                    : "text-gray-300 hover:bg-gray-700"
-                )}
-              >
-                {item.icon}
-                <span className="ml-3">{item.label}</span>
-              </a>
+            <Link 
+              key={item.href} 
+              href={item.href}
+              className={cn(
+                "flex items-center px-4 py-2 text-sm font-medium rounded-md",
+                location === item.href 
+                  ? "bg-gray-900 text-white" 
+                  : "text-gray-300 hover:bg-gray-700"
+              )}
+            >
+              {item.icon}
+              <span className="ml-3">{item.label}</span>
             </Link>
           ))}
         </nav>

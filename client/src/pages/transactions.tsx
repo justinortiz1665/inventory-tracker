@@ -324,7 +324,7 @@ export default function Transactions() {
                       </FormControl>
                       <SelectContent>
                         {isLoadingItems ? (
-                          <SelectItem value="loading">Loading items...</SelectItem>
+                          <SelectItem value="loading-items">Loading items...</SelectItem>
                         ) : (
                           inventoryItems?.map((item: any) => (
                             <SelectItem key={item.id} value={item.id.toString()}>

@@ -237,10 +237,11 @@ export default function FacilityDetail() {
       <div className="py-4 flex items-center justify-between">
         <div>
           <div className="flex items-center">
-            <Link href="/facilities">
-              <a className="text-blue-600 hover:text-blue-800 mr-2">
-                <ArrowLeft className="h-4 w-4" />
-              </a>
+            <Link 
+              href="/facilities" 
+              className="text-blue-600 hover:text-blue-800 mr-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
             </Link>
             <h1 className="text-2xl font-semibold text-gray-800">{facility?.name}</h1>
           </div>
@@ -455,7 +456,7 @@ export default function FacilityDetail() {
         <CardFooter className="flex justify-center">
           <Button variant="outline" size="sm" asChild>
             <Link href={`/transactions?facilityId=${facilityId}`}>
-              <a>View All Transactions</a>
+              View All Transactions
             </Link>
           </Button>
         </CardFooter>
