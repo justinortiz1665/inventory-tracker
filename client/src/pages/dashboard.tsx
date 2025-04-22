@@ -51,7 +51,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
         <StatCard
           title="Low Stock Items"
           value={stats?.lowStockItems || 0}
@@ -65,13 +65,6 @@ export default function Dashboard() {
           icon={<Ban className="h-5 w-5 text-white" />}
           iconColor="bg-red-500"
           isLoading={isStatsLoading}
-        />
-        <StatCard
-          title="Total Inventory Value"
-          value={formatCurrency(totalValue)}
-          icon={<DollarSign className="h-5 w-5 text-white" />}
-          iconColor="bg-green-500"
-          isLoading={isInventoryLoading}
         />
       </div>
 
