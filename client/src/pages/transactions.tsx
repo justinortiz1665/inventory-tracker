@@ -372,7 +372,7 @@ export default function Transactions() {
                         <SelectContent>
                           <SelectItem value="0">Main Inventory</SelectItem>
                           {isLoadingFacilities ? (
-                            <SelectItem value="loading">Loading facilities...</SelectItem>
+                            <SelectItem value="loading-facilities-source">Loading facilities...</SelectItem>
                           ) : (
                             facilities?.map((facility: any) => (
                               <SelectItem key={facility.id} value={facility.id.toString()}>
@@ -409,7 +409,7 @@ export default function Transactions() {
                         <SelectContent>
                           <SelectItem value="0">Main Inventory</SelectItem>
                           {isLoadingFacilities ? (
-                            <SelectItem value="loading">Loading facilities...</SelectItem>
+                            <SelectItem value="loading-facilities-dest">Loading facilities...</SelectItem>
                           ) : (
                             facilities?.map((facility: any) => (
                               <SelectItem key={facility.id} value={facility.id.toString()}>
