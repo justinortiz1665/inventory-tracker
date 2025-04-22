@@ -62,10 +62,6 @@ export default function Transactions() {
     <div>
       <div className="py-4">
         <h1 className="text-2xl font-semibold text-gray-800">Inventory Transactions</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          View a ledger of all inventory movements between facilities. 
-          Transactions are created when items are checked out from the main inventory page.
-        </p>
       </div>
       
       <Card className="mt-6">
