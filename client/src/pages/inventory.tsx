@@ -1,14 +1,22 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, ShoppingCart } from "lucide-react";
+import { Plus, ShoppingCart, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import InventoryTable from "@/components/inventory/inventory-table";
-import InventoryFilters from "@/components/inventory/inventory-filters";
 import ItemFormDialog from "@/components/inventory/item-form-dialog";
 import DeleteDialog from "@/components/inventory/delete-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Inventory() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -102,27 +110,66 @@ export default function Inventory() {
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Inventory Management</h1>
       </div>
+      
+      <div className="mb-6 relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+        <Input
+          placeholder="Search inventory..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10 w-full border-gray-300"
+        />
+      </div>
 
-      <div className="flex justify-end items-center mt-6">
+      <div className="flex flex-col md:flex-row gap-4 items-center mb-6">
+        <div className="flex flex-col md:flex-row gap-4 flex-grow">
+          <div className="w-full md:w-56">
+            <Select
+              value={categoryFilter}
+              onValueChange={setCategoryFilter}
+            >
+              <SelectTrigger className="border-gray-300">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {categories && categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="w-full md:w-56">
+            <Select
+              value="in-stock"
+              onValueChange={() => {}}
+            >
+              <SelectTrigger className="border-gray-300">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="in-stock">In Stock</SelectItem>
+                <SelectItem value="low-stock">Low Stock</SelectItem>
+                <SelectItem value="out-of-stock">Out of Stock</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button variant="outline" className="md:w-auto h-10" size="icon">
+            <SlidersHorizontal className="h-4 w-4" />
+          </Button>
+        </div>
+        
         <Link href="/transactions">
           <Button>
             <ShoppingCart className="mr-2 h-4 w-4" />
             Check Out
           </Button>
         </Link>
-      </div>
-
-      <div className="mt-4">
-        <InventoryFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          categoryFilter={categoryFilter}
-          setCategoryFilter={setCategoryFilter}
-          sortOrder=""
-          setSortOrder={() => {}}
-          categories={categories || []}
-          isCategoriesLoading={isCategoriesLoading}
-        />
       </div>
       
       <div className="mt-4">
