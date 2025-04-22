@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
+import { Plus, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import InventoryTable from "@/components/inventory/inventory-table";
 import InventoryFilters from "@/components/inventory/inventory-filters";
@@ -8,11 +8,11 @@ import ItemFormDialog from "@/components/inventory/item-form-dialog";
 import DeleteDialog from "@/components/inventory/delete-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
 
 export default function Inventory() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [sortOrder, setSortOrder] = useState("name");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -23,7 +23,7 @@ export default function Inventory() {
 
   // Fetch inventory items
   const { 
-    data: inventoryItems, 
+    data: inventoryItems = [], 
     isLoading,
     isError,
     error
@@ -97,28 +97,6 @@ export default function Inventory() {
     }
   };
 
-  // Get the sorted and filtered items
-  const getSortedItems = () => {
-    if (!inventoryItems) return [];
-
-    return [...inventoryItems].sort((a, b) => {
-      switch (sortOrder) {
-        case "name":
-          return a.name.localeCompare(b.name);
-        case "stock":
-          return b.stock - a.stock;
-        case "price":
-          return b.price - a.price;
-        case "date":
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        default:
-          return 0;
-      }
-    });
-  };
-
-  const sortedItems = getSortedItems();
-
   return (
     <div>
       <div className="py-4">
@@ -127,23 +105,32 @@ export default function Inventory() {
       </div>
 
       <div className="flex justify-between items-center mt-6">
-        <div></div>
+        <div>
+          <Link href="/transactions">
+            <Button variant="outline">
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Check Out
+            </Button>
+          </Link>
+        </div>
         <Button onClick={() => setIsAddDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Add Item
         </Button>
       </div>
 
-      <InventoryFilters
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        categoryFilter={categoryFilter}
-        setCategoryFilter={setCategoryFilter}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        categories={categories || []}
-        isCategoriesLoading={isCategoriesLoading}
-      />
+      <div className="mt-4">
+        <InventoryFilters
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          categoryFilter={categoryFilter}
+          setCategoryFilter={setCategoryFilter}
+          sortOrder=""
+          setSortOrder={() => {}}
+          categories={categories || []}
+          isCategoriesLoading={isCategoriesLoading}
+        />
+      </div>
       
       <div className="mt-4">
         {isLoading ? (
@@ -157,7 +144,7 @@ export default function Inventory() {
           </div>
         ) : (
           <InventoryTable 
-            items={sortedItems} 
+            items={inventoryItems} 
             onEdit={handleEditItem} 
             onDelete={handleDeleteItem}
           />

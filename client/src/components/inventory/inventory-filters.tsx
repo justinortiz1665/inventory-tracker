@@ -69,30 +69,6 @@ export default function InventoryFilters({
           </SelectContent>
         </Select>
       </div>
-      
-      <div className="w-full md:w-56">
-        <Label htmlFor="sort" className="mb-2 block">
-          Sort By
-        </Label>
-        <Select
-          value={sortOrder}
-          onValueChange={setSortOrder}
-        >
-          <SelectTrigger id="sort">
-            <SelectValue placeholder="Sort order" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="name-asc">Name (A-Z)</SelectItem>
-            <SelectItem value="name-desc">Name (Z-A)</SelectItem>
-            <SelectItem value="price-asc">Price (Low-High)</SelectItem>
-            <SelectItem value="price-desc">Price (High-Low)</SelectItem>
-            <SelectItem value="stock-asc">Stock (Low-High)</SelectItem>
-            <SelectItem value="stock-desc">Stock (High-Low)</SelectItem>
-            <SelectItem value="newest">Newest First</SelectItem>
-            <SelectItem value="oldest">Oldest First</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
     </div>
   );
 }
