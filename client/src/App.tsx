@@ -6,7 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Inventory from "@/pages/inventory";
-import Categories from "@/pages/categories";
+import Facilities from "@/pages/facilities";
+import FacilityDetail from "@/pages/facility-detail";
+import Transactions from "@/pages/transactions";
 import AppShell from "@/components/layout/app-shell";
 
 function Router() {
@@ -14,7 +16,9 @@ function Router() {
     <Switch>
       <Route path="/" component={Dashboard}/>
       <Route path="/inventory" component={Inventory}/>
-      <Route path="/categories" component={Categories}/>
+      <Route path="/facilities" component={Facilities}/>
+      <Route path="/facilities/:id" component={FacilityDetail}/>
+      <Route path="/transactions" component={Transactions}/>
       <Route component={NotFound} />
     </Switch>
   );

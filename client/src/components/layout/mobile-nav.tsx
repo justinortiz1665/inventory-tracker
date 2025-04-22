@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, Bell, LayoutDashboard, Package2, BarChart2, Settings } from "lucide-react";
+import { Menu, Bell, LayoutDashboard, Package2, BarChart2, Settings, Tag } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
@@ -11,8 +11,8 @@ export default function MobileNav() {
   const navItems = [
     { href: "/", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
     { href: "/inventory", label: "Inventory", icon: <Package2 className="h-5 w-5" /> },
+    { href: "/facilities", label: "Facilities", icon: <Tag className="h-5 w-5" /> },
     { href: "/reports", label: "Reports", icon: <BarChart2 className="h-5 w-5" /> },
-    { href: "/settings", label: "Settings", icon: <Settings className="h-5 w-5" /> },
   ];
 
   return (

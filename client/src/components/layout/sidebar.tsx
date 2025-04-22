@@ -33,8 +33,8 @@ export default function Sidebar({ className }: SidebarProps) {
       icon: <RefreshCcw className="h-5 w-5" /> 
     },
     { 
-      href: "/categories", 
-      label: "Categories", 
+      href: "/facilities", 
+      label: "Facilities", 
       icon: <Tag className="h-5 w-5" /> 
     },
     { 
