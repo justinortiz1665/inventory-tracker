@@ -121,9 +121,10 @@ export default function Inventory() {
         />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 items-center mb-6">
-        <div className="flex flex-col md:flex-row gap-4 flex-grow">
-          <div className="w-full md:w-56">
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+        {/* Filter Options - Takes 8 columns on larger screens */}
+        <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="w-full">
             <Select
               value={categoryFilter}
               onValueChange={setCategoryFilter}
@@ -142,7 +143,7 @@ export default function Inventory() {
             </Select>
           </div>
 
-          <div className="w-full md:w-56">
+          <div className="w-full">
             <Select
               value="in-stock"
               onValueChange={() => {}}
@@ -160,12 +161,15 @@ export default function Inventory() {
           </div>
         </div>
         
-        <Link href="/transactions">
-          <Button>
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            Check Out
-          </Button>
-        </Link>
+        {/* Checkout Button - Takes 4 columns and is aligned right on larger screens */}
+        <div className="md:col-span-4 flex md:justify-end">
+          <Link href="/transactions" className="w-full md:w-auto">
+            <Button className="w-full">
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Check Out
+            </Button>
+          </Link>
+        </div>
       </div>
       
       <div className="mt-4">
