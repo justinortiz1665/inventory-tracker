@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { 
   Select,
   SelectContent,
@@ -6,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface InventoryFiltersProps {
   searchQuery: string;
@@ -30,30 +31,24 @@ export default function InventoryFilters({
   isCategoriesLoading
 }: InventoryFiltersProps) {
   return (
-    <div className="flex flex-col gap-4 md:flex-row">
-      <div className="flex-1">
-        <Label htmlFor="search" className="mb-2 block">
-          Search
-        </Label>
+    <div className="flex flex-col gap-4 md:flex-row md:items-center">
+      <div className="flex-1 relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
         <Input
-          id="search"
-          placeholder="Search by name or SKU"
+          placeholder="Search inventory..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full"
+          className="pl-10 w-full border-gray-300"
         />
       </div>
       
       <div className="w-full md:w-56">
-        <Label htmlFor="category" className="mb-2 block">
-          Category
-        </Label>
         <Select
           value={categoryFilter}
           onValueChange={setCategoryFilter}
         >
-          <SelectTrigger id="category">
-            <SelectValue placeholder="All Categories" />
+          <SelectTrigger className="border-gray-300">
+            <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
@@ -69,6 +64,27 @@ export default function InventoryFilters({
           </SelectContent>
         </Select>
       </div>
+
+      <div className="w-full md:w-56">
+        <Select
+          value="in-stock"
+          onValueChange={() => {}}
+        >
+          <SelectTrigger className="border-gray-300">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="in-stock">In Stock</SelectItem>
+            <SelectItem value="low-stock">Low Stock</SelectItem>
+            <SelectItem value="out-of-stock">Out of Stock</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Button variant="outline" className="md:w-auto" size="icon">
+        <SlidersHorizontal className="h-4 w-4" />
+      </Button>
     </div>
   );
 }
