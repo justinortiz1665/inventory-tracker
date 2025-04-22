@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Ban, Plus } from "lucide-react";
+import { AlertTriangle, Ban, Plus, Edit, FileUp } from "lucide-react";
 import StatCard from "@/components/stats/stat-card";
 import ActivityList from "@/components/inventory/activity-list";
 import { Button } from "@/components/ui/button";
@@ -26,14 +26,26 @@ export default function Dashboard() {
           <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
           <p className="mt-1 text-sm text-gray-600">Monitor your inventory health and key metrics</p>
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="mt-4 flex flex-wrap gap-3">
         <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Add Item
         </Button>
+        <Button variant="outline">
+          <Edit className="mr-2 h-4 w-4" />
+          Edit Item
+        </Button>
+        <Button variant="outline">
+          <FileUp className="mr-2 h-4 w-4" />
+          Upload Invoice
+        </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
         <StatCard
           title="Low Stock Items"
           value={stats?.lowStockItems || 0}
