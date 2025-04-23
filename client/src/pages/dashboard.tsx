@@ -38,10 +38,6 @@ export default function Dashboard() {
           <Edit className="mr-2 h-4 w-4" />
           Edit Item
         </Button>
-        <Button variant="outline">
-          <FileUp className="mr-2 h-4 w-4" />
-          Upload Invoice
-        </Button>
       </div>
 
       {/* Stats Cards */}
