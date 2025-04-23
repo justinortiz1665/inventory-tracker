@@ -76,8 +76,6 @@ import { db } from './db';
 import { eq } from 'drizzle-orm';
 
 export class DbStorage implements IStorage {
-  constructor() {}
-
   constructor() {
     this.users = new Map();
     this.categories = new Map();
