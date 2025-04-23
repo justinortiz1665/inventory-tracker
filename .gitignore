@@ -105,3 +105,6 @@ debug/
 
 #jspm_packages
 jspm_packages/
+
+# Lock files (if using private packages)
+package-lock.json
