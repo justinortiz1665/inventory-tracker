@@ -217,14 +217,9 @@ export default function InventoryFinancialOverview() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div>
-          <CardTitle>Inventory Value Overview</CardTitle>
-          <CardDescription>
-            Total inventory cost and vendor breakdown
-          </CardDescription>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2">
+      <CardHeader className="pb-2">
+        <CardTitle>Inventory Value Overview</CardTitle>
+        <div className="mt-4 flex flex-col sm:flex-row gap-2">
           <div className="flex flex-col sm:flex-row gap-2">
             <Popover>
               <PopoverTrigger asChild>
