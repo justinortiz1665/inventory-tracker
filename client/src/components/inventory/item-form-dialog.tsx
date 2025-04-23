@@ -125,8 +125,8 @@ export default function ItemFormDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose} className="fixed inset-0 z-50">
-      <DialogContent className="max-w-md">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto sm:max-h-[85vh] w-[95vw] sm:w-full">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
