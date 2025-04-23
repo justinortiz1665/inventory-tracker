@@ -72,22 +72,11 @@ export interface IStorage {
   }>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private categories: Map<number, Category>;
-  private facilities: Map<number, Facility>;
-  private inventoryItems: Map<number, InventoryItem>;
-  private facilityInventoryItems: Map<number, FacilityInventoryItem>;
-  private inventoryTransactions: Map<number, InventoryTransaction>;
-  private activityLogs: Map<number, ActivityLog>;
-  
-  private userCurrentId: number;
-  private categoryCurrentId: number;
-  private facilityCurrentId: number;
-  private inventoryItemCurrentId: number;
-  private facilityInventoryItemCurrentId: number;
-  private transactionCurrentId: number;
-  private activityLogCurrentId: number;
+import { db } from './db';
+import { eq } from 'drizzle-orm';
+
+export class DbStorage implements IStorage {
+  constructor() {}
 
   constructor() {
     this.users = new Map();
