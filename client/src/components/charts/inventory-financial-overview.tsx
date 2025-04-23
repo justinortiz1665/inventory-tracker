@@ -224,8 +224,8 @@ export default function InventoryFinancialOverview() {
             Total inventory cost and vendor breakdown
           </CardDescription>
         </div>
-        <div className="flex items-center space-x-2">
-          <div className="flex space-x-2">
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -326,7 +326,7 @@ export default function InventoryFinancialOverview() {
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className="h-8 border-dashed"
+                    className="h-8 border-dashed w-full sm:w-auto"
                     size="sm"
                   >
                     <CalendarIcon className="mr-2 h-3 w-3" />
