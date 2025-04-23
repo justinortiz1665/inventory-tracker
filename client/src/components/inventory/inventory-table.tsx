@@ -14,6 +14,9 @@ import {
   MoreHorizontal
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 
@@ -99,20 +102,42 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Input
-                      type="number"
-                      defaultValue={item.quantity}
-                      className="w-20 h-8"
-                      onBlur={(e) => {
-                        const newQuantity = parseInt(e.target.value);
-                        if (newQuantity !== item.quantity) {
-                          onEdit({
-                            ...item,
-                            quantity: newQuantity
-                          });
-                        }
-                      }}
-                    />
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="hover:bg-gray-100"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Edit Item</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="quantity" className="text-right">Quantity</Label>
+                            <Input
+                              id="quantity"
+                              type="number"
+                              defaultValue={item.quantity}
+                              className="col-span-3"
+                              onChange={(e) => {
+                                const newQuantity = parseInt(e.target.value);
+                                if (!isNaN(newQuantity)) {
+                                  onEdit({
+                                    ...item,
+                                    quantity: newQuantity
+                                  });
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </TableCell>
                 </TableRow>
               );
