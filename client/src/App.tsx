@@ -9,6 +9,7 @@ import Inventory from "@/pages/inventory";
 import Facilities from "@/pages/facilities";
 import FacilityDetail from "@/pages/facility-detail";
 import Transactions from "@/pages/transactions";
+import Reports from "@/pages/reports";
 import AppShell from "@/components/layout/app-shell";
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/facilities" component={Facilities}/>
       <Route path="/facilities/:id" component={FacilityDetail}/>
       <Route path="/transactions" component={Transactions}/>
+      <Route path="/reports" component={Reports}/>
       <Route component={NotFound} />
     </Switch>
   );
