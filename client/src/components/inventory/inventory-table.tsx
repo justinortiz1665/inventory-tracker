@@ -7,12 +7,15 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { 
   Edit, 
   Trash2,
   MoreHorizontal
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 
@@ -84,7 +87,7 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
           ) : (
             items.map((item) => {
               const stockStatus = getStockStatus(item.quantity, item.min_threshold);
-
+              
               return (
                 <TableRow key={item.id} className={cn("border-b", stockStatus.rowColor)}>
                   <TableCell className="font-medium">{item.item_number}</TableCell>
@@ -98,14 +101,52 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-gray-100"
-                      onClick={() => onEdit(item)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="hover:bg-gray-100"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Update Quantity</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor={`quantity-${item.id}`} className="text-right">Quantity</Label>
+                            <Input
+                              id={`quantity-${item.id}`}
+                              type="number"
+                              defaultValue={item.quantity}
+                              className="col-span-3"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button
+                            type="button"
+                            onClick={() => {
+                              const input = document.getElementById(`quantity-${item.id}`) as HTMLInputElement;
+                              const newQuantity = parseInt(input.value);
+                              if (!isNaN(newQuantity)) {
+                                onEdit({
+                                  ...item,
+                                  quantity: newQuantity
+                                });
+                                const closeButton = document.querySelector('[aria-label="Close"]') as HTMLButtonElement;
+                                if (closeButton) closeButton.click();
+                              }
+                            }}
+                          >
+                            Update
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </TableCell>
                 </TableRow>
               );
