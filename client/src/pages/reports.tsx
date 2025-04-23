@@ -1,6 +1,10 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -11,7 +15,8 @@ import { formatCurrency } from "@/lib/utils";
 
 export default function Reports() {
   const [reportType, setReportType] = useState<string>("category");
-  const [timeframe, setTimeframe] = useState<string>("all");
+  const [fromDate, setFromDate] = useState<Date>();
+  const [toDate, setToDate] = useState<Date>();
 
   // Fetch required data
   const { data: items = [] } = useQuery({ queryKey: ['/api/inventory'] });
@@ -98,17 +103,51 @@ export default function Reports() {
           </SelectContent>
         </Select>
 
-        <Select value={timeframe} onValueChange={setTimeframe}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select timeframe" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Time</SelectItem>
-            <SelectItem value="year">Past Year</SelectItem>
-            <SelectItem value="month">Past Month</SelectItem>
-            <SelectItem value="week">Past Week</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center space-x-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="h-8 border-dashed" size="sm">
+                <CalendarIcon className="mr-2 h-3 w-3" />
+                <span>From: </span>
+                {fromDate ? (
+                  format(fromDate, "MMM dd, yyyy")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={fromDate}
+                onSelect={setFromDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="h-8 border-dashed" size="sm">
+                <CalendarIcon className="mr-2 h-3 w-3" />
+                <span>To: </span>
+                {toDate ? (
+                  format(toDate, "MMM dd, yyyy")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={toDate}
+                onSelect={setToDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
 
       <div className="grid gap-6">
