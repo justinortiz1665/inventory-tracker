@@ -51,26 +51,30 @@ export type InsertFacility = z.infer<typeof insertFacilitySchema>;
 export type Facility = typeof facilities.$inferSelect;
 
 // Main inventory items
-export const inventoryItems = pgTable("inventory_items", {
+export const inventoryItems = pgTable("inventory", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  sku: text("sku").notNull().unique(),
-  description: text("description"),
-  categoryId: integer("category_id").notNull(),
+  item_number: text("item_number").notNull().unique(),
+  item_name: text("item_name").notNull(),
+  category: text("category").notNull(),
+  vendor: text("vendor").notNull(),
+  quantity: integer("quantity").notNull(),
+  unit: text("unit").notNull(),
+  min_threshold: integer("min_threshold").notNull(),
+  max_threshold: integer("max_threshold").notNull(),
   price: doublePrecision("price").notNull(),
-  stock: integer("stock").notNull().default(0),
-  imageUrl: text("image_url"),
-  createdAt: timestamp("created_at").defaultNow(),
+  created_at: timestamp("created_at").defaultNow(),
 });
 
 export const insertInventoryItemSchema = createInsertSchema(inventoryItems).pick({
-  name: true,
-  sku: true,
-  description: true,
-  categoryId: true,
+  item_number: true,
+  item_name: true,
+  category: true,
+  vendor: true,
+  quantity: true,
+  unit: true,
+  min_threshold: true,
+  max_threshold: true,
   price: true,
-  stock: true,
-  imageUrl: true,
 });
 
 export type InsertInventoryItem = z.infer<typeof insertInventoryItemSchema>;
