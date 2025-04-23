@@ -70,7 +70,7 @@ export default function InventoryTable({ items }: InventoryTableProps) {
 
     try {
       const response = await fetch(`/api/inventory/${selectedItem.id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -83,10 +83,18 @@ export default function InventoryTable({ items }: InventoryTableProps) {
         throw new Error('Failed to update quantity');
       }
 
+      const updatedItem = await response.json();
       setIsEditOpen(false);
-      window.location.reload();
+      
+      // Trigger a refetch of the inventory data instead of page reload
+      queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
     } catch (error) {
       console.error('Error updating quantity:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update quantity",
+        variant: "destructive"
+      });
     }
   };
 
