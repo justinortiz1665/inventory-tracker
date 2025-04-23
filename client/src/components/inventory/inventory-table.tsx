@@ -18,12 +18,16 @@ import { Link } from "wouter";
 
 interface InventoryItem {
   id: number;
-  name: string;
-  sku: string;
-  categoryId: number;
-  stock: number;
+  item_number: string;
+  item_name: string;
+  category: string;
+  vendor: string;
+  quantity: number;
+  unit: string;
+  min_threshold: number;
+  max_threshold: number;
   price: number;
-  imageUrl?: string;
+  created_at: string;
 }
 
 interface InventoryTableProps {
@@ -34,8 +38,8 @@ interface InventoryTableProps {
 
 export default function InventoryTable({ items, onEdit, onDelete }: InventoryTableProps) {
   // Helper function to determine stock status
-  const getStockStatus = (stock: number) => {
-    if (stock <= 0) {
+  const getStockStatus = (quantity: number, min_threshold: number) => {
+    if (quantity <= 0) {
       return { 
         label: 'Out of Stock', 
         color: 'bg-red-500 text-white',
@@ -83,11 +87,11 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
               
               return (
                 <TableRow key={item.id} className={cn("border-b", stockStatus.rowColor)}>
-                  <TableCell className="font-medium">{item.sku}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>Category {item.categoryId}</TableCell>
-                  <TableCell>Vendor</TableCell>
-                  <TableCell>{item.stock} units</TableCell>
+                  <TableCell className="font-medium">{item.item_number}</TableCell>
+                  <TableCell>{item.item_name}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.vendor}</TableCell>
+                  <TableCell>{item.quantity} {item.unit}</TableCell>
                   <TableCell>
                     <Badge className={stockStatus.color + " rounded-full px-3"}>
                       {stockStatus.label}
