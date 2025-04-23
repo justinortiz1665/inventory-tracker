@@ -13,3 +13,11 @@ const connectionString = process.env.DATABASE_URL.replace('.us-east-2', '-pooler
 // Connection function
 const client = postgres(connectionString);
 export const db = drizzle(client, { schema });
+
+// Test connection
+console.log("Testing database connection...");
+db.select().from(schema.users).then(() => {
+  console.log("Successfully connected to the database!");
+}).catch((error) => {
+  console.error("Failed to connect to the database:", error.message);
+});
