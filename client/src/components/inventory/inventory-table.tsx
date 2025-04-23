@@ -1,3 +1,4 @@
+
 import { 
   Table, 
   TableBody, 
@@ -8,16 +9,10 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, MoreHorizontal } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 interface InventoryItem {
   id: number;
@@ -35,10 +30,13 @@ interface InventoryItem {
 
 interface InventoryTableProps {
   items: InventoryItem[];
-  onEdit?: (item: InventoryItem) => void;
 }
 
-export default function InventoryTable({ items, onEdit }: InventoryTableProps) {
+export default function InventoryTable({ items }: InventoryTableProps) {
+  const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [newQuantity, setNewQuantity] = useState("");
+
   const getStockStatus = (quantity: number, min_threshold: number) => {
     if (quantity <= 0) {
       return { 
@@ -61,6 +59,37 @@ export default function InventoryTable({ items, onEdit }: InventoryTableProps) {
     }
   };
 
+  const handleEdit = (item: InventoryItem) => {
+    setSelectedItem(item);
+    setNewQuantity(item.quantity.toString());
+    setIsEditOpen(true);
+  };
+
+  const handleSave = async () => {
+    if (!selectedItem) return;
+
+    try {
+      const response = await fetch(`/api/inventory/${selectedItem.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quantity: parseInt(newQuantity),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update quantity');
+      }
+
+      setIsEditOpen(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
+  };
+
   return (
     <div className="border rounded-md overflow-hidden">
       <Table>
@@ -78,7 +107,7 @@ export default function InventoryTable({ items, onEdit }: InventoryTableProps) {
         <TableBody>
           {items.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center">
+              <TableCell colSpan={7} className="h-24 text-center">
                 No inventory items found.
               </TableCell>
             </TableRow>
@@ -99,21 +128,13 @@ export default function InventoryTable({ items, onEdit }: InventoryTableProps) {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => onEdit?.(item)}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(item)}
+                    >
+                      Edit
+                    </Button>
                   </TableCell>
                 </TableRow>
               );
@@ -121,6 +142,30 @@ export default function InventoryTable({ items, onEdit }: InventoryTableProps) {
           )}
         </TableBody>
       </Table>
+
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Quantity</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              type="number"
+              value={newQuantity}
+              onChange={(e) => setNewQuantity(e.target.value)}
+              placeholder="Enter new quantity"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSave}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
