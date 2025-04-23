@@ -94,7 +94,7 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                   <TableCell>{item.item_name}</TableCell>
                   <TableCell>{item.category}</TableCell>
                   <TableCell>{item.vendor}</TableCell>
-                  <TableCell>{item.quantity} {item.unit}</TableCell>
+                  <TableCell>{item.quantity}</TableCell>
                   <TableCell>
                     <Badge className={stockStatus.color + " rounded-full px-3"}>
                       {stockStatus.label}
