@@ -113,13 +113,13 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Edit Item</DialogTitle>
+                          <DialogTitle>Update Quantity</DialogTitle>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="quantity" className="text-right">Quantity</Label>
+                            <Label htmlFor={`quantity-${item.id}`} className="text-right">Quantity</Label>
                             <Input
-                              id="quantity"
+                              id={`quantity-${item.id}`}
                               type="number"
                               defaultValue={item.quantity}
                               className="col-span-3"
@@ -130,20 +130,19 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                           <Button
                             type="button"
                             onClick={() => {
-                              const input = document.getElementById('quantity') as HTMLInputElement;
+                              const input = document.getElementById(`quantity-${item.id}`) as HTMLInputElement;
                               const newQuantity = parseInt(input.value);
                               if (!isNaN(newQuantity)) {
                                 onEdit({
                                   ...item,
                                   quantity: newQuantity
                                 });
-                                // Find and click the close button to dismiss the dialog
                                 const closeButton = document.querySelector('[aria-label="Close"]') as HTMLButtonElement;
                                 if (closeButton) closeButton.click();
                               }
                             }}
                           >
-                            Submit
+                            Update
                           </Button>
                         </DialogFooter>
                       </DialogContent>
