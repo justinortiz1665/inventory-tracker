@@ -68,4 +68,4 @@ npm run dev
 ## 👥 **Contributors**
 
 - **Justin Ortiz** - Lead Developer
-- **ChatGPT** - AI Assistant 🤖
+- **Repit** - AI Assistant 🤖
