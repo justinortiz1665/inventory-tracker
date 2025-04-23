@@ -17,6 +17,14 @@ out
 .env.test.local
 .env.production.local
 .env.local
+*.env.*
+
+# Database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+database.json
 
 # Cache and logs
 .cache
@@ -38,6 +46,10 @@ lerna-debug.log*
 .idea
 *.swp
 *.swo
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+thumbs.db
 
 # Project specific
 attached_assets/
@@ -46,6 +58,11 @@ vite.config.ts.*
 
 # Replit specific
 .breakpoints
+.replit.backup
+.upm/
+.config/
+.cache/
+.npm/
 
 # Test coverage
 coverage
@@ -56,3 +73,23 @@ coverage
 .temp
 .cache
 .docusaurus
+tmp/
+temp/
+
+# Debug files
+debug.log
+debug/
+*.debug
+
+# SSL/TLS Certificates
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.priv
+
+# Backup files
+*.bak
+*.backup
+*~
