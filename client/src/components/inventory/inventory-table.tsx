@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface InventoryItem {
   id: number;
@@ -33,6 +34,7 @@ interface InventoryTableProps {
 }
 
 export default function InventoryTable({ items }: InventoryTableProps) {
+  const { toast } = useToast();
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [newQuantity, setNewQuantity] = useState("");
