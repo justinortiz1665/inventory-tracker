@@ -1,5 +1,6 @@
 
 import { db } from './db';
+import * as schema from '../shared/schema';
 
 async function testConnection() {
   try {
