@@ -89,23 +89,23 @@ export const insertFacilityInventoryItemSchema = createInsertSchema(facilityInve
 export type InsertFacilityInventoryItem = z.infer<typeof insertFacilityInventoryItemSchema>;
 export type FacilityInventoryItem = typeof facilityInventoryItems.$inferSelect;
 
-// Inventory transactions (for tracking movement between main storage and facilities)
-export const inventoryTransactions = pgTable("inventory_transactions", {
+// Inventory transactions
+export const inventoryTransactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
-  itemId: integer("item_id").notNull(),
-  fromFacilityId: integer("from_facility_id"), // null means from main inventory
-  toFacilityId: integer("to_facility_id"), // null means to main inventory
+  user_id: integer("user_id").notNull(),
+  item_id: integer("item_id").notNull(),
+  facility_id: integer("facility_id").notNull(),
+  transaction_type: text("transaction_type").notNull(),
   quantity: integer("quantity").notNull(),
-  transactionDate: timestamp("transaction_date").defaultNow(),
-  notes: text("notes"),
+  timestamp: timestamp("timestamp").defaultNow(),
 });
 
 export const insertInventoryTransactionSchema = createInsertSchema(inventoryTransactions).pick({
-  itemId: true,
-  fromFacilityId: true,
-  toFacilityId: true,
+  user_id: true,
+  item_id: true,
+  facility_id: true,
+  transaction_type: true,
   quantity: true,
-  notes: true,
 });
 
 export type InsertInventoryTransaction = z.infer<typeof insertInventoryTransactionSchema>;
