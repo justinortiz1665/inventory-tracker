@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -67,18 +66,18 @@ export default function CheckoutDialog({
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedItems, setSelectedItems] = useState<Array<{ id: number, name: string, quantity: number }>>([]);
+  const [selectedItems, setSelectedItems] = useState<Array<{ id: number; name: string; quantity: number }>>([]);
 
   const { data: facilities = [] } = useQuery({
-    queryKey: ['/api/facilities'],
+    queryKey: ["/api/facilities"],
   });
 
-  const { data: inventoryItems = [] } = useQuery({
-    queryKey: ['/api/inventory', searchQuery],
+  const { data: inventoryItems = [], isLoading } = useQuery({
+    queryKey: ["/api/inventory", searchQuery],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (searchQuery) params.append('search', searchQuery);
-      const url = `/api/inventory${params.toString() ? `?${params.toString()}` : ''}`;
+      if (searchQuery) params.append("search", searchQuery);
+      const url = `/api/inventory${params.toString() ? `?${params.toString()}` : ""}`;
       return apiRequest("GET", url);
     },
   });
@@ -92,25 +91,23 @@ export default function CheckoutDialog({
   });
 
   const addItem = (item: any) => {
-    if (!selectedItems.some(i => i.id === item.id)) {
+    if (!selectedItems.some((i) => i.id === item.id)) {
       setSelectedItems([...selectedItems, { id: item.id, name: item.name, quantity: 1 }]);
     }
   };
 
   const removeItem = (itemId: number) => {
-    setSelectedItems(selectedItems.filter(item => item.id !== itemId));
+    setSelectedItems(selectedItems.filter((item) => item.id !== itemId));
   };
 
   const updateQuantity = (itemId: number, quantity: number) => {
-    setSelectedItems(selectedItems.map(item => 
-      item.id === itemId ? { ...item, quantity } : item
-    ));
+    setSelectedItems(selectedItems.map((item) => (item.id === itemId ? { ...item, quantity } : item)));
   };
 
   const handleSubmit = async (values: z.infer<typeof checkoutFormSchema>) => {
     setIsSubmitting(true);
     try {
-      const itemsToSubmit = selectedItems.map(item => ({
+      const itemsToSubmit = selectedItems.map((item) => ({
         itemId: item.id,
         quantity: item.quantity,
       }));
@@ -124,9 +121,9 @@ export default function CheckoutDialog({
         description: "Items have been transferred to the facility.",
       });
 
-      queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/stats'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/activity'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/inventory"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
 
       onClose();
       form.reset();
@@ -190,23 +187,27 @@ export default function CheckoutDialog({
                     className="pl-10"
                   />
                 </div>
-                <ScrollArea className="h-[300px] border rounded-md p-2">
-                  {inventoryItems.map((item: any) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between p-2 hover:bg-gray-100 rounded cursor-pointer"
-                      onClick={() => addItem(item)}
-                    >
-                      <div>
-                        <div className="font-medium">{item.name}</div>
-                        <div className="text-sm text-gray-500">SKU: {item.sku}</div>
+                {isLoading ? (
+                  <p>Loading inventory...</p>
+                ) : (
+                  <ScrollArea className="h-[300px] border rounded-md p-2">
+                    {inventoryItems.map((item: any) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between p-2 hover:bg-gray-100 rounded cursor-pointer"
+                        onClick={() => addItem(item)}
+                      >
+                        <div>
+                          <div className="font-medium">{item.name}</div>
+                          <div className="text-sm text-gray-500">SKU: {item.sku}</div>
+                        </div>
+                        <Button type="button" size="sm" variant="ghost">
+                          <Plus className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <Button type="button" size="sm" variant="ghost">
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </ScrollArea>
+                    ))}
+                  </ScrollArea>
+                )}
               </div>
 
               <div>
