@@ -336,12 +336,12 @@ export default function ItemFormDialog({
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                               <Upload className="w-8 h-8 mb-2" />
                               <p className="mb-2 text-sm">Click to upload or drag and drop</p>
-                              <p className="text-xs text-muted-foreground">CSV or Excel file</p>
+                              <p className="text-xs text-muted-foreground">CSV, Excel, or PDF file</p>
                             </div>
                             <input
                               type="file"
                               className="hidden"
-                              accept=".csv,.xlsx,.xls"
+                              accept=".csv,.xlsx,.xls,.pdf"
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (file) onChange(file);
