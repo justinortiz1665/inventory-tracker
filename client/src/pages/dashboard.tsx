@@ -29,7 +29,7 @@ export default function Dashboard() {
       </div>
 
       {/* Action Buttons */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-3 border-b">
+      <div className="py-3">
         <div className="flex flex-wrap gap-3">
           <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
