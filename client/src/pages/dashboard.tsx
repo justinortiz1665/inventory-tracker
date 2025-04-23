@@ -29,15 +29,17 @@ export default function Dashboard() {
       </div>
 
       {/* Action Buttons */}
-      <div className="mt-4 flex flex-wrap gap-3 sticky top-0 bg-background z-[5] py-2">
-        <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Item
-        </Button>
-        <Button variant="outline">
-          <Edit className="mr-2 h-4 w-4" />
-          Edit Item
-        </Button>
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-3 border-b">
+        <div className="flex flex-wrap gap-3">
+          <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Item
+          </Button>
+          <Button variant="outline">
+            <Edit className="mr-2 h-4 w-4" />
+            Edit Item
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
