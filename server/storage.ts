@@ -205,6 +205,15 @@ export class DbStorage implements IStorage {
   }
 
   async updateInventoryItem(id: number, updateData: Partial<InsertInventoryItem>): Promise<InventoryItem | undefined> {
+    const item = await db.select().from(inventoryItems).where(eq(inventoryItems.id, id)).execute();
+    if (!item.length) return undefined;
+    
+    await db.update(inventoryItems)
+      .set(updateData)
+      .where(eq(inventoryItems.id, id))
+      .execute();
+    
+    return { ...item[0], ...updateData };
     const item = this.inventoryItems.get(id);
     if (!item) return undefined;
 

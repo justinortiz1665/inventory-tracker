@@ -81,20 +81,24 @@ export default function InventoryTable({ items }: InventoryTableProps) {
         }),
       });
 
+      const data = await response.json();
+      
       if (!response.ok) {
-        throw new Error('Failed to update quantity');
+        throw new Error(data.message || 'Failed to update quantity');
       }
 
-      const updatedItem = await response.json();
       setIsEditOpen(false);
-      
-      // Trigger a refetch of the inventory data instead of page reload
       queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
+      
+      toast({
+        title: "Success",
+        description: "Quantity updated successfully",
+      });
     } catch (error) {
       console.error('Error updating quantity:', error);
       toast({
         title: "Error",
-        description: "Failed to update quantity",
+        description: error instanceof Error ? error.message : "Failed to update quantity",
         variant: "destructive"
       });
     }
