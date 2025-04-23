@@ -7,7 +7,17 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Edit, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface InventoryItem {
   id: number;
@@ -25,9 +35,10 @@ interface InventoryItem {
 
 interface InventoryTableProps {
   items: InventoryItem[];
+  onEdit?: (item: InventoryItem) => void;
 }
 
-export default function InventoryTable({ items }: InventoryTableProps) {
+export default function InventoryTable({ items, onEdit }: InventoryTableProps) {
   const getStockStatus = (quantity: number, min_threshold: number) => {
     if (quantity <= 0) {
       return { 
@@ -61,6 +72,7 @@ export default function InventoryTable({ items }: InventoryTableProps) {
             <TableHead className="font-semibold">Vendor</TableHead>
             <TableHead className="font-semibold">Quantity</TableHead>
             <TableHead className="font-semibold">Status</TableHead>
+            <TableHead className="font-semibold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -85,6 +97,23 @@ export default function InventoryTable({ items }: InventoryTableProps) {
                     <Badge className={stockStatus.color + " rounded-full px-3"}>
                       {stockStatus.label}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => onEdit?.(item)}>
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               );
