@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, ShoppingCart, Search } from "lucide-react";
+import CheckoutDialog from "@/components/inventory/checkout-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -24,6 +25,7 @@ export default function Inventory() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isCheckoutDialogOpen, setIsCheckoutDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   
   const queryClient = useQueryClient();
@@ -163,12 +165,10 @@ export default function Inventory() {
         
         {/* Checkout Button - Takes 4 columns and is aligned right on larger screens */}
         <div className="md:col-span-4 flex md:justify-end">
-          <Link href="/transactions" className="w-full md:w-auto">
-            <Button className="w-full">
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              Check Out
-            </Button>
-          </Link>
+          <Button className="w-full" onClick={() => setIsCheckoutDialogOpen(true)}>
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            Check Out
+          </Button>
         </div>
       </div>
       
@@ -220,6 +220,13 @@ export default function Inventory() {
           itemName={selectedItem.name}
         />
       )}
+
+      {/* Checkout Dialog */}
+      <CheckoutDialog
+        isOpen={isCheckoutDialogOpen}
+        onClose={() => setIsCheckoutDialogOpen(false)}
+        selectedItem={selectedItem}
+      />
     </div>
   );
 }
