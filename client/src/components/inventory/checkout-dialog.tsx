@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -191,7 +190,8 @@ export default function CheckoutDialog({
                   />
                 </div>
                 <ScrollArea className="h-[300px] border rounded-md p-2">
-                  {inventoryItems.map((item: any) => (
+                  {inventoryItems.length > 0 ? (
+                    inventoryItems.map((item: any) => (
                     <div
                       key={item.id}
                       className="flex items-center justify-between p-2 hover:bg-gray-100 rounded cursor-pointer"
@@ -205,7 +205,9 @@ export default function CheckoutDialog({
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                  ))}
+                  ))) : (
+                    <div className="p-4 text-center text-gray-500">No items found</div>
+                  )}
                 </ScrollArea>
               </div>
 
