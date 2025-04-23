@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -129,7 +128,7 @@ export default function Reports() {
     const decade = getYearsInDecade(viewDate);
     const decadeStart = decade[0];
     const decadeEnd = decade[decade.length - 1];
-    
+
     return (
       <div className="p-2">
         <div className="flex justify-between items-center mb-2">
@@ -175,18 +174,18 @@ export default function Reports() {
   // Calculate expenses by category
   const getCategoryExpenses = () => {
     const expenseMap = new Map();
-    
+
     items.forEach((item: any) => {
       const category = categories.find((c: any) => c.id === item.categoryId);
       const totalCost = item.price * item.stock;
-      
+
       if (expenseMap.has(category?.name)) {
         expenseMap.set(category?.name, expenseMap.get(category?.name) + totalCost);
       } else {
         expenseMap.set(category?.name, totalCost);
       }
     });
-    
+
     return Array.from(expenseMap.entries()).map(([name, value]) => ({
       name,
       value
@@ -315,21 +314,12 @@ export default function Reports() {
                       )
                     }}
                   />
-                  <div className="p-2 border-t">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="w-full"
-                      onClick={() => setFromDate(new Date())}
-                    >
-                      Today
-                    </Button>
-                  </div>
+                  
                 </div>
               )}
               {calendarView === "month" && <MonthView />}
               {calendarView === "year" && <YearView />}
-              
+
               <div className="p-2 border-t">
                 <Button 
                   variant="outline" 
@@ -393,7 +383,7 @@ export default function Reports() {
               <div className="text-2xl font-bold">{formatCurrency(totalExpense)}</div>
               <div className="text-sm text-gray-500">Total expenses</div>
             </div>
-            
+
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
