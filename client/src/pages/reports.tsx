@@ -17,6 +17,155 @@ export default function Reports() {
   const [reportType, setReportType] = useState<string>("category");
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
+  const [calendarView, setCalendarView] = useState<"day" | "month" | "year" | "decade">("day");
+  const [viewDate, setViewDate] = useState<Date>(new Date());
+
+  // Helper functions for the date picker
+  const getYearsInDecade = (date: Date) => {
+    const year = date.getFullYear();
+    const decadeStart = Math.floor(year / 10) * 10;
+    return Array.from({length: 10}, (_, i) => decadeStart + i);
+  };
+
+  const getMonthsInYear = (date: Date) => {
+    const year = date.getFullYear();
+    return Array.from({length: 12}, (_, i) => {
+      const d = new Date(year, i, 1);
+      return {
+        month: i,
+        name: format(d, "MMM"),
+        year
+      };
+    });
+  };
+
+  const handleHeaderClick = () => {
+    if (calendarView === "day") {
+      setCalendarView("month");
+    } else if (calendarView === "month") {
+      setCalendarView("year");
+    } else if (calendarView === "year") {
+      setCalendarView("decade");
+    }
+  };
+
+  const handleMonthSelect = (month: number) => {
+    const newDate = new Date(viewDate);
+    newDate.setMonth(month);
+    setViewDate(newDate);
+    setCalendarView("day");
+  };
+
+  const handleYearSelect = (year: number) => {
+    const newDate = new Date(viewDate);
+    newDate.setFullYear(year);
+    setViewDate(newDate);
+    setCalendarView("month");
+  };
+
+  const handleMonthChange = (direction: "prev" | "next") => {
+    const newDate = new Date(viewDate);
+    const monthChange = direction === "prev" ? -1 : 1;
+    newDate.setMonth(newDate.getMonth() + monthChange);
+    setViewDate(newDate);
+  };
+
+  const handleYearChange = (direction: "prev" | "next") => {
+    const newDate = new Date(viewDate);
+    const yearChange = direction === "prev" ? -1 : 1;
+    newDate.setFullYear(newDate.getFullYear() + yearChange);
+    setViewDate(newDate);
+  };
+
+  const handleDecadeChange = (direction: "prev" | "next") => {
+    const newDate = new Date(viewDate);
+    const decadeChange = direction === "prev" ? -10 : 10;
+    newDate.setFullYear(newDate.getFullYear() + decadeChange);
+    setViewDate(newDate);
+  };
+
+  // Month View Component
+  const MonthView = () => {
+    const months = getMonthsInYear(viewDate);
+    return (
+      <div className="p-2">
+        <div className="flex justify-between items-center mb-2">
+          <button 
+            onClick={() => handleYearChange("prev")}
+            className="p-1 rounded hover:bg-gray-200 text-xs"
+          >
+            &lt;
+          </button>
+          <button 
+            onClick={handleHeaderClick} 
+            className="font-medium hover:bg-gray-100 px-2 py-1 rounded text-sm"
+          >
+            {viewDate.getFullYear()}
+          </button>
+          <button 
+            onClick={() => handleYearChange("next")}
+            className="p-1 rounded hover:bg-gray-200 text-xs"
+          >
+            &gt;
+          </button>
+        </div>
+        <div className="grid grid-cols-3 gap-1">
+          {months.map((m) => (
+            <button
+              key={m.month}
+              onClick={() => handleMonthSelect(m.month)}
+              className="py-1 px-2 rounded hover:bg-gray-100 text-center text-xs"
+            >
+              {m.name}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // Year View Component
+  const YearView = () => {
+    const decade = getYearsInDecade(viewDate);
+    const decadeStart = decade[0];
+    const decadeEnd = decade[decade.length - 1];
+    
+    return (
+      <div className="p-2">
+        <div className="flex justify-between items-center mb-2">
+          <button 
+            onClick={() => handleDecadeChange("prev")}
+            className="p-1 rounded hover:bg-gray-200 text-xs"
+          >
+            &lt;
+          </button>
+          <button 
+            onClick={handleHeaderClick} 
+            className="font-medium hover:bg-gray-100 px-2 py-1 rounded text-sm"
+          >
+            {decadeStart} - {decadeEnd}
+          </button>
+          <button 
+            onClick={() => handleDecadeChange("next")}
+            className="p-1 rounded hover:bg-gray-200 text-xs"
+          >
+            &gt;
+          </button>
+        </div>
+        <div className="grid grid-cols-4 gap-1">
+          {decade.map((year) => (
+            <button
+              key={year}
+              onClick={() => handleYearSelect(year)}
+              className="py-1 px-1 rounded hover:bg-gray-100 text-center text-xs"
+            >
+              {year}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   // Fetch required data
   const { data: items = [] } = useQuery({ queryKey: ['/api/inventory'] });
@@ -117,22 +266,86 @@ export default function Reports() {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={fromDate}
-                onSelect={setFromDate}
-                initialFocus
-                showOutsideDays={false}
-                footer={
-                  <Button
-                    variant="outline"
-                    className="w-full mt-2"
-                    onClick={() => setFromDate(new Date())}
-                  >
-                    Today
-                  </Button>
-                }
-              />
+              {calendarView === "day" && (
+                <div className="flex flex-col">
+                  <Calendar
+                    mode="single"
+                    selected={fromDate}
+                    onSelect={(date) => {
+                      if (date) {
+                        setFromDate(date);
+                        setViewDate(date);
+                      }
+                    }}
+                    month={viewDate}
+                    onMonthChange={setViewDate}
+                    initialFocus
+                    className="p-0"
+                    classNames={{
+                      caption_label: "hidden",
+                      cell: "text-sm p-0 relative focus-within:relative focus-within:z-20",
+                      day: "h-8 w-8 p-0 font-normal",
+                      head_cell: "text-xs font-normal",
+                      nav_button: "invisible h-0 w-0",
+                      table: "w-full border-collapse",
+                      caption: "relative flex justify-between pt-1 pb-2",
+                    }}
+                    components={{
+                      Caption: ({ displayMonth }) => (
+                        <div className="flex justify-between items-center w-full pt-1 pb-2">
+                          <button 
+                            onClick={() => handleMonthChange("prev")}
+                            className="p-1 rounded hover:bg-gray-200 text-xs"
+                          >
+                            &lt;
+                          </button>
+                          <button 
+                            onClick={handleHeaderClick} 
+                            className="font-medium hover:bg-gray-100 px-2 py-1 rounded text-sm"
+                          >
+                            {format(viewDate, "MMMM yyyy")}
+                          </button>
+                          <button 
+                            onClick={() => handleMonthChange("next")}
+                            className="p-1 rounded hover:bg-gray-200 text-xs"
+                          >
+                            &gt;
+                          </button>
+                        </div>
+                      )
+                    }}
+                  />
+                  <div className="p-2 border-t">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="w-full"
+                      onClick={() => setFromDate(new Date())}
+                    >
+                      Today
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {calendarView === "month" && <MonthView />}
+              {calendarView === "year" && <YearView />}
+              
+              <div className="p-2 border-t">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="w-full"
+                  onClick={() => {
+                    if (calendarView !== "day") {
+                      setCalendarView("day");
+                    } else if (fromDate) {
+                      setViewDate(fromDate);
+                    }
+                  }}
+                >
+                  {calendarView !== "day" ? "Back to Calendar" : "Reset View"}
+                </Button>
+              </div>
             </PopoverContent>
           </Popover>
 
