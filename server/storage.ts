@@ -1,5 +1,4 @@
 import { 
-  db,
   users, type User, type InsertUser,
   categories, type Category, type InsertCategory,
   facilities, type Facility, type InsertFacility,
@@ -9,7 +8,115 @@ import {
   activityLogs, type ActivityLog, type InsertActivityLog
 } from "@shared/schema";
 
-export class DbStorage {
+// Storage interface for all CRUD operations
+export interface IStorage {
+  // User methods
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+
+  // Category methods
+  getAllCategories(): Promise<Category[]>;
+  getCategoryById(id: number): Promise<Category | undefined>;
+  createCategory(category: InsertCategory): Promise<Category>;
+  updateCategory(id: number, category: Partial<InsertCategory>): Promise<Category | undefined>;
+  deleteCategory(id: number): Promise<boolean>;
+
+  // Facility methods
+  getAllFacilities(): Promise<Facility[]>;
+  getFacilityById(id: number): Promise<Facility | undefined>;
+  createFacility(facility: InsertFacility): Promise<Facility>;
+  updateFacility(id: number, facility: Partial<InsertFacility>): Promise<Facility | undefined>;
+  deleteFacility(id: number): Promise<boolean>;
+
+  // Inventory item methods
+  getAllInventoryItems(): Promise<InventoryItem[]>;
+  getInventoryItemById(id: number): Promise<InventoryItem | undefined>;
+  getInventoryItemsByCategoryId(categoryId: number): Promise<InventoryItem[]>;
+  createInventoryItem(item: InsertInventoryItem): Promise<InventoryItem>;
+  updateInventoryItem(id: number, item: Partial<InsertInventoryItem>): Promise<InventoryItem | undefined>;
+  deleteInventoryItem(id: number): Promise<boolean>;
+  searchInventoryItems(query: string): Promise<InventoryItem[]>;
+
+  // Facility inventory methods
+  getFacilityInventory(facilityId: number): Promise<{item: InventoryItem, quantity: number}[]>;
+  addItemToFacility(facilityId: number, itemId: number, quantity: number): Promise<FacilityInventoryItem>;
+  updateFacilityInventoryItem(id: number, quantity: number): Promise<FacilityInventoryItem | undefined>;
+  removeFacilityInventoryItem(id: number): Promise<boolean>;
+
+  // Transaction methods
+  createTransaction(transaction: InsertInventoryTransaction): Promise<InventoryTransaction>;
+  getTransactionsByFacility(facilityId: number): Promise<InventoryTransaction[]>;
+  getAllTransactions(): Promise<InventoryTransaction[]>;
+
+  // Activity log methods
+  getAllActivityLogs(): Promise<ActivityLog[]>;
+  getRecentActivityLogs(limit: number): Promise<ActivityLog[]>;
+  getFacilityActivityLogs(facilityId: number, limit?: number): Promise<ActivityLog[]>;
+  createActivityLog(log: InsertActivityLog): Promise<ActivityLog>;
+
+  // Dashboard methods
+  getInventoryStats(): Promise<{
+    totalItems: number;
+    lowStockItems: number;
+    outOfStock: number;
+    categoriesCount: number;
+    facilitiesCount: number;
+  }>;
+  
+  getFacilityStats(facilityId: number): Promise<{
+    totalItems: number;
+    totalQuantity: number;
+    uniqueItems: number;
+    facilityName: string;
+  }>;
+}
+
+import { db } from './db';
+import { eq } from 'drizzle-orm';
+
+export class DbStorage implements IStorage {
+  constructor() {
+    this.users = new Map();
+    this.categories = new Map();
+    this.facilities = new Map();
+    this.inventoryItems = new Map();
+    this.facilityInventoryItems = new Map();
+    this.inventoryTransactions = new Map();
+    this.activityLogs = new Map();
+    
+    this.userCurrentId = 1;
+    this.categoryCurrentId = 1;
+    this.facilityCurrentId = 1;
+    this.inventoryItemCurrentId = 1;
+    this.facilityInventoryItemCurrentId = 1;
+    this.transactionCurrentId = 1;
+    this.activityLogCurrentId = 1;
+
+    // Initialize with sample data
+    this.initializeData();
+  }
+
+  private initializeData() {
+    // Add default categories
+    const defaultCategories = ["Electronics", "Furniture", "Office Supplies", "Clothing"];
+    defaultCategories.forEach(name => {
+      this.createCategory({ name });
+    });
+    
+    // Add default facilities
+    const defaultFacilities = [
+      { name: "Main Warehouse", location: "Seattle, WA", manager: "John Smith", description: "Main storage facility" },
+      { name: "Downtown Store", location: "Seattle, WA", manager: "Sarah Johnson", description: "Retail location" },
+      { name: "South Distribution Center", location: "Portland, OR", manager: "Mike Williams", description: "Distribution center" }
+    ];
+    
+    defaultFacilities.forEach(facility => {
+      this.createFacility(facility);
+    });
+  }
+
+  // User methods
   async getUser(id: number): Promise<User | undefined> {
     return this.users.get(id);
   }
@@ -405,29 +512,28 @@ export class DbStorage {
     return limit ? logs.slice(0, limit) : logs;
   }
 
-  async getInventoryStats(): Promise<{
-    totalItems: number;
-    lowStockItems: number;
-    outOfStock: number;
+  // Dashboard methods
+  async getAllInventoryItems() {
+    const result = await db.select().from(inventoryItems);
+    return result;
+  }
+
+  async getInventoryStats(): Promise<{ 
+    totalItems: number; 
+    lowStockItems: number; 
+    outOfStock: number; 
     categoriesCount: number;
     facilitiesCount: number;
   }> {
-    try {
-      const items = await db.select().from(inventoryItems);
-      const categoriesResult = await db.select().from(categories);
-      const facilitiesResult = await db.select().from(facilities);
-
-      return {
-        totalItems: items.length,
-        lowStockItems: items.filter(item => item.quantity > 0 && item.quantity <= item.min_threshold).length,
-        outOfStock: items.filter(item => item.quantity === 0).length,
-        categoriesCount: categoriesResult.length,
-        facilitiesCount: facilitiesResult.length
-      };
-    } catch (error) {
-      console.error('Error getting inventory stats:', error);
-      throw error;
-    }
+    const items = await this.getAllInventoryItems();
+    
+    return {
+      totalItems: items.length,
+      lowStockItems: items.filter(item => item.quantity > 0 && item.quantity <= item.min_threshold).length,
+      outOfStock: items.filter(item => item.quantity === 0).length,
+      categoriesCount: await db.select().from(categories).execute().then(r => r.length),
+      facilitiesCount: await db.select().from(facilities).execute().then(r => r.length)
+    };
   }
   
   async getFacilityStats(facilityId: number): Promise<{
@@ -450,45 +556,6 @@ export class DbStorage {
       uniqueItems: new Set(facilityItems.map(item => item.itemId)).size,
       facilityName: facility.name
     };
-  }
-  private users = new Map<number, User>();
-  private categories = new Map<number, Category>();
-  private facilities = new Map<number, Facility>();
-  private inventoryItems = new Map<number, InventoryItem>();
-  private facilityInventoryItems = new Map<number, FacilityInventoryItem>();
-  private inventoryTransactions = new Map<number, InventoryTransaction>();
-  private activityLogs = new Map<number, ActivityLog>();
-  
-  private userCurrentId = 1;
-  private categoryCurrentId = 1;
-  private facilityCurrentId = 1;
-  private inventoryItemCurrentId = 1;
-  private facilityInventoryItemCurrentId = 1;
-  private transactionCurrentId = 1;
-  private activityLogCurrentId = 1;
-
-  constructor() {
-    // Initialize with sample data
-    this.initializeData();
-  }
-
-  private initializeData() {
-    // Add default categories
-    const defaultCategories = ["Electronics", "Furniture", "Office Supplies", "Clothing"];
-    defaultCategories.forEach(name => {
-      this.createCategory({ name });
-    });
-    
-    // Add default facilities
-    const defaultFacilities = [
-      { name: "Main Warehouse", location: "Seattle, WA", manager: "John Smith", description: "Main storage facility" },
-      { name: "Downtown Store", location: "Seattle, WA", manager: "Sarah Johnson", description: "Retail location" },
-      { name: "South Distribution Center", location: "Portland, OR", manager: "Mike Williams", description: "Distribution center" }
-    ];
-    
-    defaultFacilities.forEach(facility => {
-      this.createFacility(facility);
-    });
   }
 }
 
