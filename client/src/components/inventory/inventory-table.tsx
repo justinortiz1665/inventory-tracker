@@ -137,6 +137,9 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                                   ...item,
                                   quantity: newQuantity
                                 });
+                                // Find and click the close button to dismiss the dialog
+                                const closeButton = document.querySelector('[aria-label="Close"]') as HTMLButtonElement;
+                                if (closeButton) closeButton.click();
                               }
                             }}
                           >
