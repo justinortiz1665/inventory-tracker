@@ -33,17 +33,13 @@ export type Category = typeof categories.$inferSelect;
 // Facilities (replacing categories in the UI)
 export const facilities = pgTable("facilities", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull().unique(),
-  location: text("location"),
-  description: text("description"),
-  manager: text("manager"),
+  facility_name: text("facility_name").notNull().unique(),
+  location: text("location").notNull(),
 });
 
 export const insertFacilitySchema = createInsertSchema(facilities).pick({
-  name: true,
+  facility_name: true,
   location: true,
-  description: true,
-  manager: true,
 });
 
 export type InsertFacility = z.infer<typeof insertFacilitySchema>;
