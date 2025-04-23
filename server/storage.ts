@@ -513,6 +513,11 @@ export class DbStorage implements IStorage {
   }
 
   // Dashboard methods
+  async getAllInventoryItems() {
+    const result = await db.select().from(inventoryItems);
+    return result;
+  }
+
   async getInventoryStats(): Promise<{ 
     totalItems: number; 
     lowStockItems: number; 
@@ -520,14 +525,14 @@ export class DbStorage implements IStorage {
     categoriesCount: number;
     facilitiesCount: number;
   }> {
-    const items = Array.from(this.inventoryItems.values());
+    const items = await this.getAllInventoryItems();
     
     return {
       totalItems: items.length,
-      lowStockItems: items.filter(item => item.stock > 0 && item.stock <= 5).length,
-      outOfStock: items.filter(item => item.stock === 0).length,
-      categoriesCount: this.categories.size,
-      facilitiesCount: this.facilities.size
+      lowStockItems: items.filter(item => item.quantity > 0 && item.quantity <= item.min_threshold).length,
+      outOfStock: items.filter(item => item.quantity === 0).length,
+      categoriesCount: await db.select().from(categories).execute().then(r => r.length),
+      facilitiesCount: await db.select().from(facilities).execute().then(r => r.length)
     };
   }
   

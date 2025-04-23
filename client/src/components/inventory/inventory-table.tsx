@@ -83,7 +83,7 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
             </TableRow>
           ) : (
             items.map((item) => {
-              const stockStatus = getStockStatus(item.stock);
+              const stockStatus = getStockStatus(item.quantity, item.min_threshold);
               
               return (
                 <TableRow key={item.id} className={cn("border-b", stockStatus.rowColor)}>
