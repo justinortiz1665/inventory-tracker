@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -86,7 +85,7 @@ export default function ItemFormDialog({
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("single");
-  
+
   // Initialize form with default values or existing item data
   const form = useForm<z.infer<typeof itemFormSchema>>({
     resolver: zodResolver(itemFormSchema),
@@ -121,11 +120,11 @@ export default function ItemFormDialog({
           description: "A new inventory item has been created.",
         });
       }
-      
+
       queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
       queryClient.invalidateQueries({ queryKey: ['/api/stats'] });
       queryClient.invalidateQueries({ queryKey: ['/api/activity'] });
-      
+
       onClose();
       form.reset();
     } catch (error: any) {
@@ -144,17 +143,17 @@ export default function ItemFormDialog({
     try {
       const formData = new FormData();
       formData.append('file', values.file);
-      
+
       await apiRequest("POST", "/api/inventory/bulk", formData);
       toast({
         title: "Bulk upload successful",
         description: "Items have been uploaded successfully.",
       });
-      
+
       queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
       queryClient.invalidateQueries({ queryKey: ['/api/stats'] });
       queryClient.invalidateQueries({ queryKey: ['/api/activity'] });
-      
+
       onClose();
       bulkForm.reset();
     } catch (error: any) {
