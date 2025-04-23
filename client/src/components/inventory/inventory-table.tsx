@@ -123,18 +123,26 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                               type="number"
                               defaultValue={item.quantity}
                               className="col-span-3"
-                              onChange={(e) => {
-                                const newQuantity = parseInt(e.target.value);
-                                if (!isNaN(newQuantity)) {
-                                  onEdit({
-                                    ...item,
-                                    quantity: newQuantity
-                                  });
-                                }
-                              }}
                             />
                           </div>
                         </div>
+                        <DialogFooter>
+                          <Button
+                            type="button"
+                            onClick={() => {
+                              const input = document.getElementById('quantity') as HTMLInputElement;
+                              const newQuantity = parseInt(input.value);
+                              if (!isNaN(newQuantity)) {
+                                onEdit({
+                                  ...item,
+                                  quantity: newQuantity
+                                });
+                              }
+                            }}
+                          >
+                            Submit
+                          </Button>
+                        </DialogFooter>
                       </DialogContent>
                     </Dialog>
                   </TableCell>
