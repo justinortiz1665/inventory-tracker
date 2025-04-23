@@ -122,6 +122,16 @@ export default function Reports() {
                 selected={fromDate}
                 onSelect={setFromDate}
                 initialFocus
+                showOutsideDays={false}
+                footer={
+                  <Button
+                    variant="outline"
+                    className="w-full mt-2"
+                    onClick={() => setFromDate(new Date())}
+                  >
+                    Today
+                  </Button>
+                }
               />
             </PopoverContent>
           </Popover>
@@ -144,6 +154,16 @@ export default function Reports() {
                 selected={toDate}
                 onSelect={setToDate}
                 initialFocus
+                showOutsideDays={false}
+                footer={
+                  <Button
+                    variant="outline"
+                    className="w-full mt-2"
+                    onClick={() => setToDate(new Date())}
+                  >
+                    Today
+                  </Button>
+                }
               />
             </PopoverContent>
           </Popover>
