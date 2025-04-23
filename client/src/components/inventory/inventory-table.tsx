@@ -98,14 +98,20 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onEdit(item)}
-                      className="hover:bg-gray-100"
-                    >
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+                    <Input
+                      type="number"
+                      defaultValue={item.quantity}
+                      className="w-20 h-8"
+                      onBlur={(e) => {
+                        const newQuantity = parseInt(e.target.value);
+                        if (newQuantity !== item.quantity) {
+                          onEdit({
+                            ...item,
+                            quantity: newQuantity
+                          });
+                        }
+                      }}
+                    />
                   </TableCell>
                 </TableRow>
               );
