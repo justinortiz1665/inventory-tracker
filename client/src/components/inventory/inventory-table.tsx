@@ -45,7 +45,7 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
         color: 'bg-red-500 text-white',
         rowColor: 'bg-red-50' 
       };
-    } else if (stock < 10) {
+    } else if (quantity <= min_threshold) {
       return { 
         label: 'Low Stock', 
         color: 'bg-yellow-500 text-white',
