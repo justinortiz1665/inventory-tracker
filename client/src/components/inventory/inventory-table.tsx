@@ -6,18 +6,8 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
-  Edit, 
-  Trash2,
-  MoreHorizontal
-} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Link } from "wouter";
 
 interface InventoryItem {
   id: number;
@@ -35,12 +25,9 @@ interface InventoryItem {
 
 interface InventoryTableProps {
   items: InventoryItem[];
-  onEdit: (item: InventoryItem) => void;
-  onDelete: (item: InventoryItem) => void;
 }
 
-export default function InventoryTable({ items, onEdit, onDelete }: InventoryTableProps) {
-  // Helper function to determine stock status
+export default function InventoryTable({ items }: InventoryTableProps) {
   const getStockStatus = (quantity: number, min_threshold: number) => {
     if (quantity <= 0) {
       return { 
@@ -74,20 +61,19 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
             <TableHead className="font-semibold">Vendor</TableHead>
             <TableHead className="font-semibold">Quantity</TableHead>
             <TableHead className="font-semibold">Status</TableHead>
-            <TableHead className="font-semibold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {items.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center">
+              <TableCell colSpan={6} className="h-24 text-center">
                 No inventory items found.
               </TableCell>
             </TableRow>
           ) : (
             items.map((item) => {
               const stockStatus = getStockStatus(item.quantity, item.min_threshold);
-              
+
               return (
                 <TableRow key={item.id} className={cn("border-b", stockStatus.rowColor)}>
                   <TableCell className="font-medium">{item.item_number}</TableCell>
@@ -99,16 +85,6 @@ export default function InventoryTable({ items, onEdit, onDelete }: InventoryTab
                     <Badge className={stockStatus.color + " rounded-full px-3"}>
                       {stockStatus.label}
                     </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-gray-100"
-                      onClick={() => onEdit(item)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
                   </TableCell>
                 </TableRow>
               );
