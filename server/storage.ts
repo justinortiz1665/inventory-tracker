@@ -3,6 +3,7 @@ import {
   categories, type Category, type InsertCategory,
   facilities, type Facility, type InsertFacility,
   inventoryItems, type InventoryItem, type InsertInventoryItem,
+  or, like, lower,
   facilityInventoryItems, type FacilityInventoryItem, type InsertFacilityInventoryItem,
   inventoryTransactions, type InventoryTransaction, type InsertInventoryTransaction,
   activityLogs, type ActivityLog, type InsertActivityLog
@@ -251,8 +252,12 @@ export class DbStorage implements IStorage {
       const result = await db
         .select()
         .from(inventoryItems)
-        .where(sql`LOWER(item_name) LIKE ${`%${lowercaseQuery}%`}`)
-        .or(sql`LOWER(item_number) LIKE ${`%${lowercaseQuery}%`}`)
+        .where(
+          or(
+            like(lower(inventoryItems.item_name), `%${lowercaseQuery}%`),
+            like(lower(inventoryItems.item_number), `%${lowercaseQuery}%`)
+          )
+        )
         .execute();
       
       return result;
