@@ -50,10 +50,6 @@ export default function Inventory() {
       }
       return response.json();
     },
-        throw new Error('Failed to fetch inventory items');
-      }
-      return response.json();
-    },
   });
 
   // Fetch categories
