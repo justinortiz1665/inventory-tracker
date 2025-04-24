@@ -570,34 +570,36 @@ export class DbStorage implements IStorage {
 
   // Dashboard methods
   async getAllInventoryItems(filters: { search?: string, category?: string, status?: string } = {}) {
-    let query = db.select().from(inventoryItems);
-    
-    if (filters.category) {
-      query = query.where(eq(inventoryItems.category, filters.category));
-    }
-    
-    if (filters.status) {
-      switch (filters.status) {
-        case 'in-stock':
-          query = query.where(gt(inventoryItems.quantity, inventoryItems.min_threshold));
-          break;
-        case 'low-stock':
-          query = query.where(and(
-            gt(inventoryItems.quantity, 0),
-            lte(inventoryItems.quantity, inventoryItems.min_threshold)
-          ));
-          break;
-        case 'out-of-stock':
-          query = query.where(eq(inventoryItems.quantity, 0));
-          break;
+    try {
+      let query = db.select().from(inventoryItems);
+      
+      if (filters.category && filters.category !== 'all') {
+        query = query.where(eq(inventoryItems.category, filters.category));
       }
+      
+      if (filters.status && filters.status !== 'all') {
+        switch (filters.status) {
+          case 'in-stock':
+            query = query.where(sql`quantity > min_threshold`);
+            break;
+          case 'low-stock':
+            query = query.where(sql`quantity > 0 AND quantity <= min_threshold`);
+            break;
+          case 'out-of-stock':
+            query = query.where(sql`quantity = 0`);
+            break;
+        }
+      }
+      
+      if (filters.search) {
+        query = query.where(like(sql`LOWER(item_name)`, `%${filters.search.toLowerCase()}%`));
+      }
+      
+      return await query;
+    } catch (error) {
+      console.error('Error fetching inventory items:', error);
+      return [];
     }
-    
-    if (filters.search) {
-      query = query.where(like(inventoryItems.item_name, `%${filters.search}%`));
-    }
-    
-    return await query;
   }
 
   async getInventoryStats(): Promise<{ 
