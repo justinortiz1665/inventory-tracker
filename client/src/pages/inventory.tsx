@@ -54,8 +54,15 @@ export default function Inventory() {
   });
 
   // Fetch categories
-  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
+  const { data: categories = [], isLoading: isCategoriesLoading } = useQuery({
     queryKey: ['/api/categories'],
+    queryFn: async () => {
+      const response = await fetch('/api/categories');
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+      return response.json();
+    }
   });
 
   // Delete item mutation
