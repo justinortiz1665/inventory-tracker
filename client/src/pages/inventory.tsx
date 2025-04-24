@@ -43,6 +43,7 @@ export default function Inventory() {
       const params = new URLSearchParams();
       if (searchQuery) params.append('search', searchQuery);
       if (categoryFilter) params.append('categoryId', categoryFilter);
+      params.append('orderBy', 'id');
       
       const response = await fetch(`/api/inventory?${params.toString()}`);
       if (!response.ok) {

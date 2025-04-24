@@ -258,6 +258,7 @@ export class DbStorage implements IStorage {
             like(sql`lower(${inventoryItems.item_number})`, `%${lowercaseQuery}%`)
           )
         )
+        .orderBy(inventoryItems.id)
         .execute();
       
       return result;
