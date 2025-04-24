@@ -21,7 +21,7 @@ import { apiRequest } from "@/lib/queryClient";
 
 export default function Inventory() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -136,12 +136,12 @@ export default function Inventory() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                {categories?.map((category) => (
+                {categories?.map((category: any) => (
                   <SelectItem 
                     key={category.id} 
-                    value={category.id?.toString() || 'all'}
+                    value={category.id.toString()}
                   >
-                    {category.name || 'Unnamed Category'}
+                    {category.name}
                   </SelectItem>
                 ))}
               </SelectContent>
