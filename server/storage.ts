@@ -3,11 +3,11 @@ import {
   categories, type Category, type InsertCategory,
   facilities, type Facility, type InsertFacility,
   inventoryItems, type InventoryItem, type InsertInventoryItem,
-  or, like, lower,
   facilityInventoryItems, type FacilityInventoryItem, type InsertFacilityInventoryItem,
   inventoryTransactions, type InventoryTransaction, type InsertInventoryTransaction,
   activityLogs, type ActivityLog, type InsertActivityLog
 } from "@shared/schema";
+import { or, like, lower } from "drizzle-orm";
 
 // Storage interface for all CRUD operations
 export interface IStorage {
