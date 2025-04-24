@@ -139,7 +139,7 @@ export default function Inventory() {
                 {categories?.map((category: any) => (
                   <SelectItem 
                     key={category.id} 
-                    value={category.id.toString()}
+                    value={category.name}
                   >
                     {category.name}
                   </SelectItem>
