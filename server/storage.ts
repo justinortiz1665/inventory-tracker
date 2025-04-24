@@ -7,7 +7,7 @@ import {
   inventoryTransactions, type InventoryTransaction, type InsertInventoryTransaction,
   activityLogs, type ActivityLog, type InsertActivityLog
 } from "@shared/schema";
-import { or, like, lower } from "drizzle-orm";
+import { or, like, sql } from "drizzle-orm";
 
 // Storage interface for all CRUD operations
 export interface IStorage {
@@ -254,8 +254,8 @@ export class DbStorage implements IStorage {
         .from(inventoryItems)
         .where(
           or(
-            like(lower(inventoryItems.item_name), `%${lowercaseQuery}%`),
-            like(lower(inventoryItems.item_number), `%${lowercaseQuery}%`)
+            like(sql`lower(${inventoryItems.item_name})`, `%${lowercaseQuery}%`),
+            like(sql`lower(${inventoryItems.item_number})`, `%${lowercaseQuery}%`)
           )
         )
         .execute();
