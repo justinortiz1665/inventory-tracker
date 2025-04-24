@@ -95,10 +95,10 @@ export class DbStorage implements IStorage {
     this.activityLogCurrentId = 1;
 
     // Initialize with sample data
-    this.initializeData();
+    this.initializeData().catch(console.error);
   }
 
-  private initializeData() {
+  private async initializeData() {
     // Add categories from inventory items
     try {
       const items = await db.select().from(inventoryItems);
