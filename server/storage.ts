@@ -212,10 +212,18 @@ export class DbStorage implements IStorage {
     return this.inventoryItems.get(id);
   }
 
-  async getInventoryItemsByCategoryId(categoryId: number): Promise<InventoryItem[]> {
-    return Array.from(this.inventoryItems.values()).filter(
-      item => item.categoryId === categoryId
-    );
+  async getInventoryItemsByCategory(category: string): Promise<InventoryItem[]> {
+    try {
+      const result = await db
+        .select()
+        .from(inventoryItems)
+        .where(eq(inventoryItems.category, category))
+        .execute();
+      return result;
+    } catch (error) {
+      console.error('Error getting items by category:', error);
+      return [];
+    }
   }
 
   async createInventoryItem(insertItem: InsertInventoryItem): Promise<InventoryItem> {

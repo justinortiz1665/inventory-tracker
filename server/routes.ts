@@ -87,13 +87,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Inventory items routes
   app.get("/api/inventory", async (req: Request, res: Response) => {
     try {
-      const { search, categoryId } = req.query;
+      const { search, category } = req.query;
       
       let items;
       if (search && typeof search === 'string') {
         items = await storage.searchInventoryItems(search);
-      } else if (categoryId && typeof categoryId === 'string') {
-        items = await storage.getInventoryItemsByCategoryId(parseInt(categoryId));
+      } else if (category && typeof category === 'string') {
+        items = await storage.getInventoryItemsByCategory(category);
       } else {
         items = await storage.getAllInventoryItems();
       }
