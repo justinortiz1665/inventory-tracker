@@ -569,9 +569,35 @@ export class DbStorage implements IStorage {
   }
 
   // Dashboard methods
-  async getAllInventoryItems() {
-    const result = await db.select().from(inventoryItems);
-    return result;
+  async getAllInventoryItems(filters: { search?: string, category?: string, status?: string } = {}) {
+    let query = db.select().from(inventoryItems);
+    
+    if (filters.category) {
+      query = query.where(eq(inventoryItems.category, filters.category));
+    }
+    
+    if (filters.status) {
+      switch (filters.status) {
+        case 'in-stock':
+          query = query.where(gt(inventoryItems.quantity, inventoryItems.min_threshold));
+          break;
+        case 'low-stock':
+          query = query.where(and(
+            gt(inventoryItems.quantity, 0),
+            lte(inventoryItems.quantity, inventoryItems.min_threshold)
+          ));
+          break;
+        case 'out-of-stock':
+          query = query.where(eq(inventoryItems.quantity, 0));
+          break;
+      }
+    }
+    
+    if (filters.search) {
+      query = query.where(like(inventoryItems.item_name, `%${filters.search}%`));
+    }
+    
+    return await query;
   }
 
   async getInventoryStats(): Promise<{ 

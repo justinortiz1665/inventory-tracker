@@ -26,11 +26,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const category = await storage.getCategoryById(id);
-      
+
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
       }
-      
+
       res.json(category);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch category" });
@@ -54,12 +54,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const validatedData = insertCategorySchema.partial().parse(req.body);
-      
+
       const updatedCategory = await storage.updateCategory(id, validatedData);
       if (!updatedCategory) {
         return res.status(404).json({ message: "Category not found" });
       }
-      
+
       res.json(updatedCategory);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -73,11 +73,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const result = await storage.deleteCategory(id);
-      
+
       if (!result) {
         return res.status(400).json({ message: "Category cannot be deleted or not found" });
       }
-      
+
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete category" });
@@ -87,17 +87,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Inventory items routes
   app.get("/api/inventory", async (req: Request, res: Response) => {
     try {
-      const { search, category } = req.query;
-      
-      let items;
-      if (search && typeof search === 'string') {
-        items = await storage.searchInventoryItems(search);
-      } else if (category && typeof category === 'string') {
-        items = await storage.getInventoryItemsByCategory(category);
-      } else {
-        items = await storage.getAllInventoryItems();
-      }
-      
+      const { search, category, status } = req.query;
+      const items = await storage.getAllInventoryItems({
+        search: search as string,
+        category: category as string,
+        status: status as string
+      });
       res.json(items);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch inventory items" });
@@ -108,11 +103,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const item = await storage.getInventoryItemById(id);
-      
+
       if (!item) {
         return res.status(404).json({ message: "Inventory item not found" });
       }
-      
+
       res.json(item);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch inventory item" });
@@ -136,12 +131,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const validatedData = insertInventoryItemSchema.partial().parse(req.body);
-      
+
       const updatedItem = await storage.updateInventoryItem(id, validatedData);
       if (!updatedItem) {
         return res.status(404).json({ message: "Inventory item not found" });
       }
-      
+
       res.json(updatedItem);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -155,11 +150,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const result = await storage.deleteInventoryItem(id);
-      
+
       if (!result) {
         return res.status(404).json({ message: "Inventory item not found" });
       }
-      
+
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete inventory item" });
@@ -171,13 +166,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { limit } = req.query;
       let logs;
-      
+
       if (limit && typeof limit === 'string') {
         logs = await storage.getRecentActivityLogs(parseInt(limit));
       } else {
         logs = await storage.getAllActivityLogs();
       }
-      
+
       res.json(logs);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch activity logs" });
@@ -211,11 +206,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const facility = await storage.getFacilityById(id);
-      
+
       if (!facility) {
         return res.status(404).json({ message: "Facility not found" });
       }
-      
+
       res.json(facility);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch facility" });
@@ -239,12 +234,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const validatedData = insertFacilitySchema.partial().parse(req.body);
-      
+
       const updatedFacility = await storage.updateFacility(id, validatedData);
       if (!updatedFacility) {
         return res.status(404).json({ message: "Facility not found" });
       }
-      
+
       res.json(updatedFacility);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -258,11 +253,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const result = await storage.deleteFacility(id);
-      
+
       if (!result) {
         return res.status(400).json({ message: "Facility cannot be deleted or not found" });
       }
-      
+
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete facility" });
@@ -284,11 +279,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const facilityId = parseInt(req.params.id);
       const { itemId, quantity } = req.body;
-      
+
       if (!itemId || !quantity) {
         return res.status(400).json({ message: "Item ID and quantity are required" });
       }
-      
+
       const result = await storage.addItemToFacility(facilityId, parseInt(itemId), parseInt(quantity));
       res.status(201).json(result);
     } catch (error) {
@@ -300,16 +295,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const { quantity } = req.body;
-      
+
       if (quantity === undefined) {
         return res.status(400).json({ message: "Quantity is required" });
       }
-      
+
       const updatedItem = await storage.updateFacilityInventoryItem(id, parseInt(quantity));
       if (!updatedItem) {
         return res.status(404).json({ message: "Facility inventory item not found" });
       }
-      
+
       res.json(updatedItem);
     } catch (error) {
       res.status(500).json({ message: "Failed to update facility inventory item" });
@@ -320,11 +315,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const result = await storage.removeFacilityInventoryItem(id);
-      
+
       if (!result) {
         return res.status(404).json({ message: "Facility inventory item not found" });
       }
-      
+
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to remove facility inventory item" });
@@ -347,14 +342,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const facilityId = parseInt(req.params.id);
       const { limit } = req.query;
-      
+
       let logs;
       if (limit && typeof limit === 'string') {
         logs = await storage.getFacilityActivityLogs(facilityId, parseInt(limit));
       } else {
         logs = await storage.getFacilityActivityLogs(facilityId);
       }
-      
+
       res.json(logs);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch facility activity logs" });
@@ -365,14 +360,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/transactions", async (req: Request, res: Response) => {
     try {
       const { facilityId } = req.query;
-      
+
       let transactions;
       if (facilityId && typeof facilityId === 'string') {
         transactions = await storage.getTransactionsByFacility(parseInt(facilityId));
       } else {
         transactions = await storage.getAllTransactions();
       }
-      
+
       res.json(transactions);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch transactions" });
@@ -383,7 +378,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertInventoryTransactionSchema.parse(req.body);
       const transaction = await storage.createTransaction(validatedData);
-      
+
       // Add activity log for the transaction
       const item = await storage.getInventoryItemById(validatedData.itemId);
       if (item) {
@@ -391,10 +386,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           await storage.getFacilityById(validatedData.fromFacilityId) : null;
         const toFacility = validatedData.toFacilityId ?
           await storage.getFacilityById(validatedData.toFacilityId) : null;
-          
+
         const fromName = fromFacility ? fromFacility.name : "Main Inventory";
         const toName = toFacility ? toFacility.name : "Main Inventory";
-        
+
         await storage.createActivityLog({
           action: "transfer",
           itemId: item.id,
@@ -403,7 +398,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           facilityId: validatedData.toFacilityId || validatedData.fromFacilityId
         });
       }
-      
+
       res.status(201).json(transaction);
     } catch (error) {
       if (error instanceof z.ZodError) {

@@ -22,6 +22,7 @@ import { apiRequest } from "@/lib/queryClient";
 export default function Inventory() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -38,11 +39,12 @@ export default function Inventory() {
     isError,
     error
   } = useQuery({
-    queryKey: ['/api/inventory', searchQuery, categoryFilter],
+    queryKey: ['/api/inventory', searchQuery, categoryFilter, statusFilter],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (searchQuery) params.append('search', searchQuery);
       if (categoryFilter && categoryFilter !== 'all') params.append('category', categoryFilter);
+      if (statusFilter && statusFilter !== 'all') params.append('status', statusFilter);
       params.append('orderBy', 'id');
       
       const response = await fetch(`/api/inventory?${params.toString()}`);
@@ -150,8 +152,8 @@ export default function Inventory() {
 
           <div className="w-full">
             <Select
-              value="in-stock"
-              onValueChange={() => {}}
+              value={statusFilter || "all"}
+              onValueChange={setStatusFilter}
             >
               <SelectTrigger className="border-gray-300">
                 <SelectValue placeholder="Status" />
