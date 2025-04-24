@@ -136,8 +136,11 @@ export default function Inventory() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                {categories?.map((category) => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
+                {categories?.map((category: any) => (
+                  <SelectItem 
+                    key={category.id} 
+                    value={category.id.toString()}
+                  >
                     {category.name}
                   </SelectItem>
                 ))}
