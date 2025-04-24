@@ -50,13 +50,6 @@ export default function Inventory() {
       }
       return response.json();
     },
-      const params = new URLSearchParams();
-      if (searchQuery) params.append('search', searchQuery);
-      if (categoryFilter) params.append('categoryId', categoryFilter);
-      
-      const url = `/api/inventory${params.toString() ? `?${params.toString()}` : ''}`;
-      const response = await fetch(url);
-      if (!response.ok) {
         throw new Error('Failed to fetch inventory items');
       }
       return response.json();
