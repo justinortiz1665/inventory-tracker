@@ -128,14 +128,14 @@ export default function Inventory() {
         <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="w-full">
             <Select
-              value={categoryFilter || ""}
-              onValueChange={setCategoryFilter}
+              value={categoryFilter || "all"}
+              onValueChange={(value) => setCategoryFilter(value === "all" ? "" : value)}
             >
               <SelectTrigger className="border-gray-300">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 {categories?.map((category) => (
                   <SelectItem key={category.id} value={category.id.toString()}>
                     {category.name}
