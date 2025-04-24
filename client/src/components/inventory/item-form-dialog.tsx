@@ -92,7 +92,7 @@ export default function ItemFormDialog({
     defaultValues: {
       name: item?.name || "",
       sku: item?.sku || "",
-      categoryId: item?.categoryId || undefined,
+      category: item?.category || undefined,
       price: item?.price || undefined,
       stock: item?.stock || 0,
       description: item?.description || "",

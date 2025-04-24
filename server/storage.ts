@@ -100,19 +100,25 @@ export class DbStorage implements IStorage {
 
   private initializeData() {
     // Add categories from inventory items
-    const categoriesFromInventory = new Set();
-    Array.from(this.inventoryItems.values()).forEach(item => {
-      if (item.category) {
-        categoriesFromInventory.add(item.category);
-      }
-    });
-    
-    // Create categories based on inventory items
-    Array.from(categoriesFromInventory).forEach(category => {
-      this.createCategory({ 
-        name: category.toString()
+    try {
+      const items = await db.select().from(inventoryItems);
+      const categoriesFromInventory = new Set();
+      
+      items.forEach(item => {
+        if (item.category) {
+          categoriesFromInventory.add(item.category);
+        }
       });
-    });
+      
+      // Create categories based on inventory items
+      for (const category of Array.from(categoriesFromInventory)) {
+        await db.insert(categories).values({ 
+          name: category.toString()
+        }).onConflictDoNothing();
+      }
+    } catch (error) {
+      console.error("Error initializing categories:", error);
+    }
     
     // Add default facilities
     const defaultFacilities = [
