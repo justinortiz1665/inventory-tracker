@@ -247,11 +247,14 @@ export class DbStorage implements IStorage {
 
   async searchInventoryItems(query: string): Promise<InventoryItem[]> {
     const lowercaseQuery = query.toLowerCase();
-    return Array.from(this.inventoryItems.values()).filter(item => 
-      item.name.toLowerCase().includes(lowercaseQuery) || 
-      item.sku.toLowerCase().includes(lowercaseQuery) ||
-      (item.description && item.description.toLowerCase().includes(lowercaseQuery))
-    );
+    const result = await db
+      .select()
+      .from(inventoryItems)
+      .where(sql`LOWER(item_name) LIKE ${`%${lowercaseQuery}%`}`)
+      .or(sql`LOWER(item_number) LIKE ${`%${lowercaseQuery}%`}`)
+      .execute();
+    
+    return result;
   }
 
   // Activity log methods
