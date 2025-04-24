@@ -42,7 +42,7 @@ export default function Inventory() {
     queryFn: async () => {
       const params = new URLSearchParams();
       if (searchQuery) params.append('search', searchQuery);
-      if (categoryFilter) params.append('categoryId', categoryFilter);
+      if (categoryFilter && categoryFilter !== 'all') params.append('category', categoryFilter);
       params.append('orderBy', 'id');
       
       const response = await fetch(`/api/inventory?${params.toString()}`);
@@ -129,7 +129,7 @@ export default function Inventory() {
           <div className="w-full">
             <Select
               value={categoryFilter || "all"}
-              onValueChange={(value) => setCategoryFilter(value === "all" ? "" : value)}
+              onValueChange={setCategoryFilter}
             >
               <SelectTrigger className="border-gray-300">
                 <SelectValue placeholder="Category" />
