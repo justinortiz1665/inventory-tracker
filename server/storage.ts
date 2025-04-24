@@ -153,24 +153,17 @@ export class DbStorage implements IStorage {
   // Category methods
   async getAllCategories(): Promise<Category[]> {
     try {
-      const result = await db.select().from(categories);
-      if (!result.length) {
-        // If no categories exist, try to extract them from inventory items
-        const items = await db.select().from(inventoryItems);
-        const uniqueCategories = new Set(items.map(item => item.categoryId));
-        
-        // Create categories for each unique categoryId
-        for (const categoryId of uniqueCategories) {
-          if (categoryId) {
-            await db.insert(categories).values({
-              id: categoryId,
-              name: `Category ${categoryId}`
-            });
-          }
-        }
-        return db.select().from(categories);
-      }
-      return result;
+      // Get unique categories directly from inventory items
+      const items = await db.select().from(inventoryItems);
+      const uniqueCategories = new Set(items.map(item => item.category));
+      
+      // Convert to array and format
+      const categoryArray = Array.from(uniqueCategories).map(categoryName => ({
+        id: Math.random(), // Temporary ID for display
+        name: categoryName
+      }));
+      
+      return categoryArray;
     } catch (error) {
       console.error('Error fetching categories:', error);
       return [];
