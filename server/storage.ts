@@ -326,61 +326,98 @@ export class DbStorage implements IStorage {
 
   // Facility methods
   async getAllFacilities(): Promise<Facility[]> {
-    return Array.from(this.facilities.values());
+    try {
+      return await db.select().from(facilities);
+    } catch (error) {
+      console.error('Error fetching facilities:', error);
+      return [];
+    }
   }
 
   async getFacilityById(id: number): Promise<Facility | undefined> {
-    return this.facilities.get(id);
+    try {
+      const result = await db
+        .select()
+        .from(facilities)
+        .where(eq(facilities.id, id))
+        .execute();
+      return result[0];
+    } catch (error) {
+      console.error('Error fetching facility:', error);
+      return undefined;
+    }
   }
 
   async createFacility(insertFacility: InsertFacility): Promise<Facility> {
-    const id = this.facilityCurrentId++;
-    const facility: Facility = { ...insertFacility, id };
-    this.facilities.set(id, facility);
-    
-    // Add activity log
-    await this.createActivityLog({
-      action: "add",
-      itemName: facility.name,
-      description: `Added facility: ${facility.name}`,
-      facilityId: id
-    });
-    
-    return facility;
+    try {
+      const result = await db
+        .insert(facilities)
+        .values(insertFacility)
+        .returning()
+        .execute();
+      
+      const facility = result[0];
+      
+      // Add activity log
+      await this.createActivityLog({
+        action: "add",
+        itemName: facility.facility_name,
+        description: `Added facility: ${facility.facility_name}`,
+        facilityId: facility.id
+      });
+      
+      return facility;
+    } catch (error) {
+      console.error('Error creating facility:', error);
+      throw error;
+    }
   }
 
   async updateFacility(id: number, updateData: Partial<InsertFacility>): Promise<Facility | undefined> {
-    const facility = this.facilities.get(id);
-    if (!facility) return undefined;
-
-    const updatedFacility: Facility = { ...facility, ...updateData };
-    this.facilities.set(id, updatedFacility);
-    
-    // Add activity log
-    await this.createActivityLog({
-      action: "update",
-      itemName: updatedFacility.name,
-      description: `Updated facility: ${updatedFacility.name}`,
-      facilityId: id
-    });
-    
-    return updatedFacility;
+    try {
+      const result = await db
+        .update(facilities)
+        .set(updateData)
+        .where(eq(facilities.id, id))
+        .returning()
+        .execute();
+      
+      const facility = result[0];
+      if (!facility) return undefined;
+      
+      // Add activity log
+      await this.createActivityLog({
+        action: "update",
+        itemName: facility.facility_name,
+        description: `Updated facility: ${facility.facility_name}`,
+        facilityId: facility.id
+      });
+      
+      return facility;
+    } catch (error) {
+      console.error('Error updating facility:', error);
+      return undefined;
+    }
   }
 
   async deleteFacility(id: number): Promise<boolean> {
-    const facility = this.facilities.get(id);
-    if (!facility) return false;
-    
-    // Check if facility has inventory items before deletion
-    const hasFacilityItems = Array.from(this.facilityInventoryItems.values()).some(
-      item => item.facilityId === id
-    );
-
-    if (hasFacilityItems) {
-      return false;
-    }
-    
-    const result = this.facilities.delete(id);
+    try {
+      const facility = await this.getFacilityById(id);
+      if (!facility) return false;
+      
+      // Check if facility has inventory items
+      const hasItems = await db
+        .select()
+        .from(facilityInventoryItems)
+        .where(eq(facilityInventoryItems.facility_id, id))
+        .execute();
+        
+      if (hasItems.length > 0) return false;
+      
+      await db
+        .delete(facilities)
+        .where(eq(facilities.id, id))
+        .execute();
     
     // Add activity log if deletion was successful
     if (result) {
