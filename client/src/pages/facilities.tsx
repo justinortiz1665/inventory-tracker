@@ -215,7 +215,6 @@ export default function Facilities() {
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Location</TableHead>
-                  <TableHead>Manager</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -247,16 +246,7 @@ export default function Facilities() {
                           <span className="text-gray-400">-</span>
                         )}
                       </TableCell>
-                      <TableCell>
-                        {facility.manager ? (
-                          <div className="flex items-center">
-                            <User className="mr-1 h-4 w-4 text-gray-500" />
-                            <span>{facility.manager}</span>
-                          </div>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </TableCell>
+                      
                       <TableCell className="text-right">
                         <Button
                           variant="ghost"
