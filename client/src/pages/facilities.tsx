@@ -324,37 +324,7 @@ export default function Facilities() {
                 )}
               />
               
-              <FormField
-                control={form.control}
-                name="manager"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Manager</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Facility manager (optional)" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Facility description (optional)" 
-                        className="resize-none" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               
               <DialogFooter>
                 <Button
