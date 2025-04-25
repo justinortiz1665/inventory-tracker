@@ -201,7 +201,7 @@ export default function CheckoutDialog({
                       onClick={() => addItem({id: item.id, name: item.item_name})}
                     >
                       <div>
-                        <div className="font-medium text-xs">{item.item_name}</div>
+                        <div className="font-medium text-xs">({item.quantity}) {item.item_name}</div>
                       </div>
                       <Button type="button" size="sm" variant="ghost">
                         <Plus className="h-4 w-4" />
