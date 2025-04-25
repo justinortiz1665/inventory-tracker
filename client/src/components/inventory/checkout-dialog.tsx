@@ -214,8 +214,9 @@ export default function CheckoutDialog({
               </div>
 
               <div className="space-y-4">
-                <h2 className="text-lg font-medium mb-2">Selected Items</h2>
-                <ScrollArea className="h-[300px] border rounded-md p-2">
+                <h2 className="text-lg font-medium">Selected Items</h2>
+                <div className="mt-[42px]">
+                  <ScrollArea className="h-[300px] border rounded-md p-2">
                   {selectedItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-between p-2 border-b last:border-0">
                       <div className="flex-1">
@@ -240,7 +241,8 @@ export default function CheckoutDialog({
                       </Button>
                     </div>
                   ))}
-                </ScrollArea>
+                  </ScrollArea>
+                </div>
               </div>
             </div>
 
