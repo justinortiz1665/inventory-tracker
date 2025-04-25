@@ -64,7 +64,7 @@ export interface IStorage {
     categoriesCount: number;
     facilitiesCount: number;
   }>;
-  
+
   getFacilityStats(facilityId: number): Promise<{
     totalItems: number;
     totalQuantity: number;
@@ -85,7 +85,7 @@ export class DbStorage implements IStorage {
     this.facilityInventoryItems = new Map();
     this.inventoryTransactions = new Map();
     this.activityLogs = new Map();
-    
+
     this.userCurrentId = 1;
     this.categoryCurrentId = 1;
     this.facilityCurrentId = 1;
@@ -103,13 +103,13 @@ export class DbStorage implements IStorage {
     try {
       const items = await db.select().from(inventoryItems);
       const categoriesFromInventory = new Set();
-      
+
       items.forEach(item => {
         if (item.category) {
           categoriesFromInventory.add(item.category);
         }
       });
-      
+
       // Create categories based on inventory items
       for (const category of Array.from(categoriesFromInventory)) {
         await db.insert(categories).values({ 
@@ -119,14 +119,14 @@ export class DbStorage implements IStorage {
     } catch (error) {
       console.error("Error initializing categories:", error);
     }
-    
+
     // Add default facilities
     const defaultFacilities = [
       { name: "Main Warehouse", location: "Seattle, WA", manager: "John Smith", description: "Main storage facility" },
       { name: "Downtown Store", location: "Seattle, WA", manager: "Sarah Johnson", description: "Retail location" },
       { name: "South Distribution Center", location: "Portland, OR", manager: "Mike Williams", description: "Distribution center" }
     ];
-    
+
     defaultFacilities.forEach(facility => {
       this.createFacility(facility);
     });
@@ -156,13 +156,13 @@ export class DbStorage implements IStorage {
       // Get unique categories directly from inventory items
       const items = await db.select().from(inventoryItems);
       const uniqueCategories = new Set(items.map(item => item.category));
-      
+
       // Convert to array and format
       const categoryArray = Array.from(uniqueCategories).map(categoryName => ({
         id: Math.random(), // Temporary ID for display
         name: categoryName
       }));
-      
+
       return categoryArray;
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -246,12 +246,12 @@ export class DbStorage implements IStorage {
   async updateInventoryItem(id: number, updateData: Partial<InsertInventoryItem>): Promise<InventoryItem | undefined> {
     const result = await db.select().from(inventoryItems).where(eq(inventoryItems.id, id)).execute();
     if (!result.length) return undefined;
-    
+
     await db.update(inventoryItems)
       .set(updateData)
       .where(eq(inventoryItems.id, id))
       .execute();
-    
+
     const updatedItem = { ...result[0], ...updateData };
 
     // Add activity log
@@ -298,7 +298,7 @@ export class DbStorage implements IStorage {
         )
         .orderBy(inventoryItems.id)
         .execute();
-      
+
       return result;
     } catch (error) {
       console.error('Error searching inventory items:', error);
@@ -326,99 +326,62 @@ export class DbStorage implements IStorage {
 
   // Facility methods
   async getAllFacilities(): Promise<Facility[]> {
-    try {
-      return await db.select().from(facilities);
-    } catch (error) {
-      console.error('Error fetching facilities:', error);
-      return [];
-    }
+    return Array.from(this.facilities.values());
   }
 
   async getFacilityById(id: number): Promise<Facility | undefined> {
-    try {
-      const result = await db
-        .select()
-        .from(facilities)
-        .where(eq(facilities.id, id))
-        .execute();
-      return result[0];
-    } catch (error) {
-      console.error('Error fetching facility:', error);
-      return undefined;
-    }
+    return this.facilities.get(id);
   }
 
   async createFacility(insertFacility: InsertFacility): Promise<Facility> {
-    try {
-      const result = await db
-        .insert(facilities)
-        .values(insertFacility)
-        .returning()
-        .execute();
-      
-      const facility = result[0];
-      
-      // Add activity log
-      await this.createActivityLog({
-        action: "add",
-        itemName: facility.facility_name,
-        description: `Added facility: ${facility.facility_name}`,
-        facilityId: facility.id
-      });
-      
-      return facility;
-    } catch (error) {
-      console.error('Error creating facility:', error);
-      throw error;
-    }
+    const id = this.facilityCurrentId++;
+    const facility: Facility = { ...insertFacility, id };
+    this.facilities.set(id, facility);
+
+    // Add activity log
+    await this.createActivityLog({
+      action: "add",
+      itemName: facility.name,
+      description: `Added facility: ${facility.name}`,
+      facilityId: id
+    });
+
+    return facility;
   }
 
   async updateFacility(id: number, updateData: Partial<InsertFacility>): Promise<Facility | undefined> {
-    try {
-      const result = await db
-        .update(facilities)
-        .set(updateData)
-        .where(eq(facilities.id, id))
-        .returning()
-        .execute();
-      
-      const facility = result[0];
-      if (!facility) return undefined;
-      
-      // Add activity log
-      await this.createActivityLog({
-        action: "update",
-        itemName: facility.facility_name,
-        description: `Updated facility: ${facility.facility_name}`,
-        facilityId: facility.id
-      });
-      
-      return facility;
-    } catch (error) {
-      console.error('Error updating facility:', error);
-      return undefined;
-    }
+    const facility = this.facilities.get(id);
+    if (!facility) return undefined;
+
+    const updatedFacility: Facility = { ...facility, ...updateData };
+    this.facilities.set(id, updatedFacility);
+
+    // Add activity log
+    await this.createActivityLog({
+      action: "update",
+      itemName: updatedFacility.name,
+      description: `Updated facility: ${updatedFacility.name}`,
+      facilityId: id
+    });
+
+    return updatedFacility;
   }
 
   async deleteFacility(id: number): Promise<boolean> {
-    try {
-      const facility = await this.getFacilityById(id);
-      if (!facility) return false;
-      
-      // Check if facility has inventory items
-      const hasItems = await db
-        .select()
-        .from(facilityInventoryItems)
-        .where(eq(facilityInventoryItems.facility_id, id))
-        .execute();
-        
-      if (hasItems.length > 0) return false;
-      
-      await db
-        .delete(facilities)
-        .where(eq(facilities.id, id))
-        .execute();
-    
+    const facility = this.facilities.get(id);
+    if (!facility) return false;
+
+    // Check if facility has inventory items before deletion
+    const hasFacilityItems = Array.from(this.facilityInventoryItems.values()).some(
+      item => item.facilityId === id
+    );
+
+    if (hasFacilityItems) {
+      return false;
+    }
+
+    const result = this.facilities.delete(id);
+
     // Add activity log if deletion was successful
     if (result) {
       await this.createActivityLog({
@@ -427,50 +390,50 @@ export class DbStorage implements IStorage {
         description: `Removed facility: ${facility.name}`,
       });
     }
-    
+
     return result;
   }
-  
+
   // Facility inventory methods
   async getFacilityInventory(facilityId: number): Promise<{item: InventoryItem, quantity: number}[]> {
     const facilityItems = Array.from(this.facilityInventoryItems.values())
       .filter(item => item.facilityId === facilityId);
-      
+
     return Promise.all(facilityItems.map(async (facilityItem) => {
       const item = await this.getInventoryItemById(facilityItem.itemId);
       if (!item) {
         throw new Error(`Inventory item with id ${facilityItem.itemId} not found`);
       }
-      
+
       return {
         item,
         quantity: facilityItem.quantity
       };
     }));
   }
-  
+
   async addItemToFacility(facilityId: number, itemId: number, quantity: number): Promise<FacilityInventoryItem> {
     // Verify the facility exists
     const facility = await this.getFacilityById(facilityId);
     if (!facility) {
       throw new Error(`Facility with id ${facilityId} not found`);
     }
-    
+
     // Verify the item exists
     const item = await this.getInventoryItemById(itemId);
     if (!item) {
       throw new Error(`Inventory item with id ${itemId} not found`);
     }
-    
+
     // Check if the item is already in the facility
     const existingItem = Array.from(this.facilityInventoryItems.values())
       .find(fi => fi.facilityId === facilityId && fi.itemId === itemId);
-      
+
     if (existingItem) {
       // Update the quantity if the item already exists
       return this.updateFacilityInventoryItem(existingItem.id, existingItem.quantity + quantity);
     }
-    
+
     // Otherwise, create a new facility inventory item
     const id = this.facilityInventoryItemCurrentId++;
     const now = new Date();
@@ -481,9 +444,9 @@ export class DbStorage implements IStorage {
       quantity,
       lastUpdated: now
     };
-    
+
     this.facilityInventoryItems.set(id, facilityItem);
-    
+
     // Add activity log
     await this.createActivityLog({
       action: "add",
@@ -492,7 +455,7 @@ export class DbStorage implements IStorage {
       description: `Added ${quantity} units of ${item.name} to ${facility.name}`,
       facilityId
     });
-    
+
     // Create transaction record
     await this.createTransaction({
       itemId,
@@ -501,27 +464,27 @@ export class DbStorage implements IStorage {
       quantity,
       notes: `Initial transfer to ${facility.name}`
     });
-    
+
     return facilityItem;
   }
-  
+
   async updateFacilityInventoryItem(id: number, quantity: number): Promise<FacilityInventoryItem | undefined> {
     const facilityItem = this.facilityInventoryItems.get(id);
     if (!facilityItem) return undefined;
-    
+
     const now = new Date();
     const updatedItem: FacilityInventoryItem = {
       ...facilityItem,
       quantity,
       lastUpdated: now
     };
-    
+
     this.facilityInventoryItems.set(id, updatedItem);
-    
+
     // Get related data for logging
     const item = await this.getInventoryItemById(updatedItem.itemId);
     const facility = await this.getFacilityById(updatedItem.facilityId);
-    
+
     if (item && facility) {
       // Add activity log
       await this.createActivityLog({
@@ -532,21 +495,21 @@ export class DbStorage implements IStorage {
         facilityId: facility.id
       });
     }
-    
+
     return updatedItem;
   }
-  
+
   async removeFacilityInventoryItem(id: number): Promise<boolean> {
     const facilityItem = this.facilityInventoryItems.get(id);
     if (!facilityItem) return false;
-    
+
     const result = this.facilityInventoryItems.delete(id);
-    
+
     if (result) {
       // Get related data for logging
       const item = await this.getInventoryItemById(facilityItem.itemId);
       const facility = await this.getFacilityById(facilityItem.facilityId);
-      
+
       if (item && facility) {
         // Add activity log
         await this.createActivityLog({
@@ -556,7 +519,7 @@ export class DbStorage implements IStorage {
           description: `Removed ${item.name} from ${facility.name}`,
           facilityId: facility.id
         });
-        
+
         // Create transaction record
         await this.createTransaction({
           itemId: item.id,
@@ -567,10 +530,10 @@ export class DbStorage implements IStorage {
         });
       }
     }
-    
+
     return result;
   }
-  
+
   // Transaction methods
   async createTransaction(transaction: InsertInventoryTransaction): Promise<InventoryTransaction> {
     const id = this.transactionCurrentId++;
@@ -580,28 +543,28 @@ export class DbStorage implements IStorage {
       id,
       transactionDate: now
     };
-    
+
     this.inventoryTransactions.set(id, newTransaction);
     return newTransaction;
   }
-  
+
   async getTransactionsByFacility(facilityId: number): Promise<InventoryTransaction[]> {
     return Array.from(this.inventoryTransactions.values())
       .filter(t => t.fromFacilityId === facilityId || t.toFacilityId === facilityId)
       .sort((a, b) => new Date(b.transactionDate).getTime() - new Date(a.transactionDate).getTime());
   }
-  
+
   async getAllTransactions(): Promise<InventoryTransaction[]> {
     return Array.from(this.inventoryTransactions.values())
       .sort((a, b) => new Date(b.transactionDate).getTime() - new Date(a.transactionDate).getTime());
   }
-  
+
   // Additional activity log methods
   async getFacilityActivityLogs(facilityId: number, limit?: number): Promise<ActivityLog[]> {
     const logs = Array.from(this.activityLogs.values())
       .filter(log => log.facilityId === facilityId)
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      
+
     return limit ? logs.slice(0, limit) : logs;
   }
 
@@ -609,11 +572,11 @@ export class DbStorage implements IStorage {
   async getAllInventoryItems(filters: { search?: string, category?: string, status?: string } = {}) {
     try {
       let query = db.select().from(inventoryItems);
-      
+
       if (filters.category && filters.category !== 'all') {
         query = query.where(eq(inventoryItems.category, filters.category));
       }
-      
+
       if (filters.status && filters.status !== 'all') {
         switch (filters.status) {
           case 'in-stock':
@@ -627,11 +590,11 @@ export class DbStorage implements IStorage {
             break;
         }
       }
-      
+
       if (filters.search) {
         query = query.where(like(sql`LOWER(item_name)`, `%${filters.search.toLowerCase()}%`));
       }
-      
+
       return await query;
     } catch (error) {
       console.error('Error fetching inventory items:', error);
@@ -647,7 +610,7 @@ export class DbStorage implements IStorage {
     facilitiesCount: number;
   }> {
     const items = await this.getAllInventoryItems();
-    
+
     return {
       totalItems: items.length,
       lowStockItems: items.filter(item => item.quantity > 0 && item.quantity <= item.min_threshold).length,
@@ -656,7 +619,7 @@ export class DbStorage implements IStorage {
       facilitiesCount: await db.select().from(facilities).execute().then(r => r.length)
     };
   }
-  
+
   async getFacilityStats(facilityId: number): Promise<{
     totalItems: number;
     totalQuantity: number;
@@ -667,10 +630,10 @@ export class DbStorage implements IStorage {
     if (!facility) {
       throw new Error(`Facility with id ${facilityId} not found`);
     }
-    
+
     const facilityItems = Array.from(this.facilityInventoryItems.values())
       .filter(item => item.facilityId === facilityId);
-      
+
     return {
       totalItems: facilityItems.length,
       totalQuantity: facilityItems.reduce((sum, item) => sum + item.quantity, 0),
