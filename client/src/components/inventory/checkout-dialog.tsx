@@ -203,8 +203,8 @@ export default function CheckoutDialog({
                       <div>
                         <div className="font-medium text-xs">({item.quantity}) {item.item_name}</div>
                       </div>
-                      <Button type="button" size="sm" variant="ghost">
-                        <Plus className="h-4 w-4" />
+                      <Button type="button" size="sm" variant="ghost" className="h-8 w-8 p-0">
+                        <Plus className="h-5 w-5" />
                       </Button>
                     </div>
                   ))) : (
@@ -236,8 +236,9 @@ export default function CheckoutDialog({
                         variant="ghost"
                         size="sm"
                         onClick={() => removeItem(item.id)}
+                        className="h-8 w-8 p-0"
                       >
-                        <X className="h-4 w-4" />
+                        <X className="h-5 w-5" />
                       </Button>
                     </div>
                   ))}
