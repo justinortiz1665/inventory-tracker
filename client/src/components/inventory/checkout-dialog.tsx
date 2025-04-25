@@ -149,7 +149,7 @@ export default function CheckoutDialog({
         setSelectedItems([]);
         onClose();
       }}>
-      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] sm:w-full max-w-3xl max-h-[80vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle>Checkout to Facility</DialogTitle>
           <DialogDescription>
@@ -158,7 +158,7 @@ export default function CheckoutDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3 sm:space-y-4">
             <FormField
               control={form.control}
               name="facilityId"
