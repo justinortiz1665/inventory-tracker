@@ -220,7 +220,12 @@ export default function CheckoutDialog({
                   {selectedItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-between p-2 border-b last:border-0">
                       <div className="flex-1">
-                        <div className="font-medium">{item.name}</div>
+                        <div 
+                          className="font-medium cursor-pointer hover:text-blue-600"
+                          onClick={() => removeItem(item.id)}
+                        >
+                          {item.name}
+                        </div>
                         <div className="flex items-center gap-2 mt-1">
                           <Input
                             type="number"
@@ -231,14 +236,6 @@ export default function CheckoutDialog({
                           />
                         </div>
                       </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeItem(item.id)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
                     </div>
                   ))}
                   </ScrollArea>
