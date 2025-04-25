@@ -184,7 +184,7 @@ export default function CheckoutDialog({
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
               <div className="space-y-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
@@ -195,7 +195,7 @@ export default function CheckoutDialog({
                     className="pl-10"
                   />
                 </div>
-                <ScrollArea className="h-[300px] border rounded-md p-2">
+                <ScrollArea className="h-[200px] border rounded-md p-2">
                   {inventoryItems.length > 0 ? (
                     inventoryItems.map((item: any) => (
                     <div
@@ -218,8 +218,7 @@ export default function CheckoutDialog({
 
               <div className="space-y-4">
                 <h2 className="text-lg font-medium">Selected Items</h2>
-                <div className="mt-[42px]">
-                  <ScrollArea className="h-[300px] border rounded-md p-2">
+                <ScrollArea className="h-[200px] border rounded-md p-2">
                   {selectedItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-between p-2 border-b last:border-0">
                       <div className="flex-1">
