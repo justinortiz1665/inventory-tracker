@@ -119,17 +119,6 @@ export class DbStorage implements IStorage {
     } catch (error) {
       console.error("Error initializing categories:", error);
     }
-
-    // Add default facilities
-    const defaultFacilities = [
-      { name: "Main Warehouse", location: "Seattle, WA", manager: "John Smith", description: "Main storage facility" },
-      { name: "Downtown Store", location: "Seattle, WA", manager: "Sarah Johnson", description: "Retail location" },
-      { name: "South Distribution Center", location: "Portland, OR", manager: "Mike Williams", description: "Distribution center" }
-    ];
-
-    defaultFacilities.forEach(facility => {
-      this.createFacility(facility);
-    });
   }
 
   // User methods
@@ -326,72 +315,87 @@ export class DbStorage implements IStorage {
 
   // Facility methods
   async getAllFacilities(): Promise<Facility[]> {
-    return Array.from(this.facilities.values());
+    try {
+      return await db.select().from(facilities);
+    } catch (error) {
+      console.error('Error fetching facilities:', error);
+      return [];
+    }
   }
 
   async getFacilityById(id: number): Promise<Facility | undefined> {
-    return this.facilities.get(id);
+    try {
+      const result = await db.select().from(facilities).where(eq(facilities.id, id));
+      return result[0];
+    } catch (error) {
+      console.error('Error fetching facility:', error);
+      return undefined;
+    }
   }
 
   async createFacility(insertFacility: InsertFacility): Promise<Facility> {
-    const id = this.facilityCurrentId++;
-    const facility: Facility = { ...insertFacility, id };
-    this.facilities.set(id, facility);
+    const result = await db.insert(facilities).values(insertFacility).returning();
+    const facility = result[0];
 
     // Add activity log
     await this.createActivityLog({
       action: "add",
-      itemName: facility.name,
-      description: `Added facility: ${facility.name}`,
-      facilityId: id
+      itemName: facility.facility_name,
+      description: `Added facility: ${facility.facility_name}`,
+      facilityId: facility.id
     });
 
     return facility;
   }
 
   async updateFacility(id: number, updateData: Partial<InsertFacility>): Promise<Facility | undefined> {
-    const facility = this.facilities.get(id);
-    if (!facility) return undefined;
+    const result = await db.update(facilities)
+      .set(updateData)
+      .where(eq(facilities.id, id))
+      .returning();
 
-    const updatedFacility: Facility = { ...facility, ...updateData };
-    this.facilities.set(id, updatedFacility);
+    if (!result.length) return undefined;
+    const facility = result[0];
 
     // Add activity log
     await this.createActivityLog({
       action: "update",
-      itemName: updatedFacility.name,
-      description: `Updated facility: ${updatedFacility.name}`,
+      itemName: facility.facility_name,
+      description: `Updated facility: ${facility.facility_name}`,
       facilityId: id
     });
 
-    return updatedFacility;
+    return facility;
   }
 
   async deleteFacility(id: number): Promise<boolean> {
-    const facility = this.facilities.get(id);
-    if (!facility) return false;
+    try {
+      // Check if facility has inventory items
+      const facilityItems = await db.select()
+        .from(facilityInventoryItems)
+        .where(eq(facilityInventoryItems.facility_id, id));
 
-    // Check if facility has inventory items before deletion
-    const hasFacilityItems = Array.from(this.facilityInventoryItems.values()).some(
-      item => item.facilityId === id
-    );
+      if (facilityItems.length > 0) {
+        return false;
+      }
 
-    if (hasFacilityItems) {
-      return false;
-    }
+      const facility = await this.getFacilityById(id);
+      if (!facility) return false;
 
-    const result = this.facilities.delete(id);
+      await db.delete(facilities).where(eq(facilities.id, id));
 
-    // Add activity log if deletion was successful
-    if (result) {
+      // Add activity log
       await this.createActivityLog({
         action: "delete",
-        itemName: facility.name,
-        description: `Removed facility: ${facility.name}`,
+        itemName: facility.facility_name,
+        description: `Removed facility: ${facility.facility_name}`,
       });
-    }
 
-    return result;
+      return true;
+    } catch (error) {
+      console.error('Error deleting facility:', error);
+      return false;
+    }
   }
 
   // Facility inventory methods
