@@ -168,7 +168,7 @@ export default function CheckoutDialog({
                     <SelectContent>
                       {facilities.map((facility: any) => (
                         <SelectItem key={facility.id} value={facility.id.toString()}>
-                          {facility.name}
+                          {facility.facility_name}
                         </SelectItem>
                       ))}
                     </SelectContent>
