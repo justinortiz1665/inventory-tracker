@@ -436,14 +436,16 @@ export class DbStorage implements IStorage {
   }
       await this.createActivityLog({
         action: "delete",
-        itemName: facility.name,
-        description: `Removed facility: ${facility.name}`,
+        itemName: facility.facility_name,
+        description: `Removed facility: ${facility.facility_name}`,
       });
+      return true;
+    } catch (error) {
+      console.error('Error deleting facility:', error);
+      return false;
     }
-    
-    return result;
   }
-  
+
   // Facility inventory methods
   async getFacilityInventory(facilityId: number): Promise<{item: InventoryItem, quantity: number}[]> {
     const facilityItems = Array.from(this.facilityInventoryItems.values())
