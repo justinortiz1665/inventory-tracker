@@ -291,6 +291,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/facilities/:id/inventory/bulk", async (req: Request, res: Response) => {
+    try {
+      const facilityId = parseInt(req.params.id);
+      const { items } = req.body;
+
+      if (!Array.isArray(items)) {
+        return res.status(400).json({ message: "Items array is required" });
+      }
+
+      const results = [];
+      for (const item of items) {
+        const { itemId, quantity } = item;
+        const result = await storage.addItemToFacility(facilityId, itemId, quantity);
+        
+        // Create transaction record for each item
+        await storage.createTransaction({
+          itemId: itemId,
+          fromFacilityId: null, // null indicates main inventory
+          toFacilityId: facilityId,
+          quantity: quantity,
+          notes: "Bulk checkout"
+        });
+        
+        results.push(result);
+      }
+
+      res.status(201).json(results);
+    } catch (error) {
+      res.status(500).json({ message: `Failed to process bulk checkout: ${error.message}` });
+    }
+  });
+
   app.put("/api/facilities/inventory/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
