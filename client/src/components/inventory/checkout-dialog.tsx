@@ -240,8 +240,7 @@ export default function CheckoutDialog({
                       </div>
                     </div>
                   ))}
-                  </ScrollArea>
-                </div>
+                </ScrollArea>
               </div>
             </div>
 
