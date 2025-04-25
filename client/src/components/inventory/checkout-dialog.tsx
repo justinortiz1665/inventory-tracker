@@ -232,7 +232,7 @@ export default function CheckoutDialog({
                             min="1"
                             value={item.quantity}
                             onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
-                            className="w-20"
+                            className="w-20 text-xs"
                           />
                         </div>
                       </div>
