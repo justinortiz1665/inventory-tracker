@@ -218,25 +218,15 @@ export default function CheckoutDialog({
                 <div className="mt-[42px]">
                   <ScrollArea className="h-[300px] border rounded-md p-2">
                   {selectedItems.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between p-2 border-b last:border-0">
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between p-2 hover:bg-gray-100 rounded cursor-pointer"
+                      onClick={() => removeItem(item.id)}
+                    >
                       <div className="flex-1">
-                        <div className="font-medium">{item.name}</div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Input
-                            type="number"
-                            min="1"
-                            value={item.quantity}
-                            onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
-                            className="w-20"
-                          />
-                        </div>
+                        <div className="font-medium text-xs">({item.quantity}) {item.name}</div>
                       </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeItem(item.id)}
-                      >
+                      <Button type="button" size="sm" variant="ghost">
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
