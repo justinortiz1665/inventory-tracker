@@ -77,8 +77,11 @@ export default function CheckoutDialog({
     queryFn: async () => {
       const params = new URLSearchParams();
       if (searchQuery) params.append('search', searchQuery);
-      const url = `/api/inventory${params.toString() ? `?${params.toString()}` : ''}`;
-      return apiRequest("GET", url);
+      const response = await fetch(`/api/inventory?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch inventory items');
+      }
+      return response.json();
     },
   });
 
@@ -195,11 +198,11 @@ export default function CheckoutDialog({
                     <div
                       key={item.id}
                       className="flex items-center justify-between p-2 hover:bg-gray-100 rounded cursor-pointer"
-                      onClick={() => addItem(item)}
+                      onClick={() => addItem({id: item.id, name: item.item_name})}
                     >
                       <div>
-                        <div className="font-medium">{item.name}</div>
-                        <div className="text-sm text-gray-500">SKU: {item.sku}</div>
+                        <div className="font-medium">{item.item_name}</div>
+                        <div className="text-sm text-gray-500">SKU: {item.item_number}</div>
                       </div>
                       <Button type="button" size="sm" variant="ghost">
                         <Plus className="h-4 w-4" />
