@@ -229,11 +229,9 @@ export default function Facilities() {
                   facilities?.map((facility: any) => (
                     <TableRow key={facility.id}>
                       <TableCell className="font-medium">
-                        <Link href={`/facilities/${facility.id}`}>
-                          <a className="flex items-center text-blue-600 hover:underline">
-                            {facility.name}
-                            <ExternalLink className="ml-1 h-3 w-3" />
-                          </a>
+                        <Link href={`/facilities/${facility.id}`} className="flex items-center text-blue-600 hover:underline">
+                          {facility.facility_name}
+                          <ExternalLink className="ml-1 h-3 w-3" />
                         </Link>
                       </TableCell>
                       <TableCell>
