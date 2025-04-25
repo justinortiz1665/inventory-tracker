@@ -224,7 +224,7 @@ export default function CheckoutDialog({
                     <div key={item.id} className="flex items-center justify-between p-2 border-b last:border-0">
                       <div className="flex-1">
                         <div 
-                          className="font-medium cursor-pointer hover:text-blue-600"
+                          className="font-medium text-xs cursor-pointer hover:text-blue-600"
                           onClick={() => removeItem(item.id)}
                         >
                           {item.name}
