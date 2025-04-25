@@ -414,13 +414,26 @@ export class DbStorage implements IStorage {
         
       if (hasItems.length > 0) return false;
       
-      await db
+      const result = await db
         .delete(facilities)
         .where(eq(facilities.id, id))
         .execute();
-    
-    // Add activity log if deletion was successful
-    if (result) {
+      
+      // Add activity log if deletion was successful
+      if (result.length > 0) {
+        await this.createActivityLog({
+          action: "delete",
+          itemName: facility.facility_name,
+          description: `Removed facility: ${facility.facility_name}`,
+        });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error deleting facility:', error);
+      return false;
+    }
+  }
       await this.createActivityLog({
         action: "delete",
         itemName: facility.name,
