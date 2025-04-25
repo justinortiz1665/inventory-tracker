@@ -46,10 +46,8 @@ import { Textarea } from "@/components/ui/textarea";
 
 // Facility form schema
 const facilityFormSchema = z.object({
-  name: z.string().min(1, "Facility name is required"),
+  facility_name: z.string().min(1, "Facility name is required"),
   location: z.string().optional(),
-  description: z.string().optional(),
-  manager: z.string().optional(),
 });
 
 type FacilityFormValues = z.infer<typeof facilityFormSchema>;
@@ -67,10 +65,8 @@ export default function Facilities() {
   const form = useForm<FacilityFormValues>({
     resolver: zodResolver(facilityFormSchema),
     defaultValues: {
-      name: "",
+      facility_name: "",
       location: "",
-      description: "",
-      manager: "",
     },
   });
   
@@ -152,10 +148,8 @@ export default function Facilities() {
   const handleEditFacility = (facility: any) => {
     setSelectedFacility(facility);
     form.reset({ 
-      name: facility.name,
+      facility_name: facility.facility_name,
       location: facility.location || "",
-      description: facility.description || "",
-      manager: facility.manager || "",
     });
     setIsEditDialogOpen(true);
   };
@@ -298,7 +292,7 @@ export default function Facilities() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="name"
+                name="facility_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Facility Name</FormLabel>
