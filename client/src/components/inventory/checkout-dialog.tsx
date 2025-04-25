@@ -182,17 +182,19 @@ export default function CheckoutDialog({
             />
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
-                  <Input
-                    placeholder="Search items..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <ScrollArea className="h-[300px] border rounded-md p-2">
+              <div>
+                <h4 className="font-medium mb-2">Search Items</h4>
+                <div className="space-y-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+                    <Input
+                      placeholder="Search items..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <ScrollArea className="h-[300px] border rounded-md p-2">
                   {inventoryItems.length > 0 ? (
                     inventoryItems.map((item: any) => (
                     <div
