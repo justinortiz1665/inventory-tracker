@@ -195,7 +195,7 @@ export default function CheckoutDialog({
                     className="pl-10"
                   />
                 </div>
-                <ScrollArea className="h-[200px] border rounded-md p-2">
+                <ScrollArea className="h-[25vh] border rounded-md p-2">
                   {inventoryItems.length > 0 ? (
                     inventoryItems.map((item: any) => (
                     <div
@@ -218,7 +218,7 @@ export default function CheckoutDialog({
 
               <div className="space-y-4">
                 <h2 className="text-lg font-medium">Selected Items</h2>
-                <ScrollArea className="h-[200px] border rounded-md p-2">
+                <ScrollArea className="h-[25vh] border rounded-md p-2">
                   {selectedItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-between p-2 border-b last:border-0">
                       <div className="flex-1">
