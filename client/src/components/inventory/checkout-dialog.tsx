@@ -145,7 +145,10 @@ export default function CheckoutDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={() => {
+        setSelectedItems([]);
+        onClose();
+      }}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>Checkout to Facility</DialogTitle>
@@ -244,7 +247,10 @@ export default function CheckoutDialog({
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
+              <Button type="button" variant="outline" onClick={() => {
+                setSelectedItems([]);
+                onClose();
+              }} disabled={isSubmitting}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting || selectedItems.length === 0}>
