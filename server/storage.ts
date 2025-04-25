@@ -122,14 +122,18 @@ export class DbStorage implements IStorage {
 
     // Add default facilities
     const defaultFacilities = [
-      { name: "Main Warehouse", location: "Seattle, WA", manager: "John Smith", description: "Main storage facility" },
-      { name: "Downtown Store", location: "Seattle, WA", manager: "Sarah Johnson", description: "Retail location" },
-      { name: "South Distribution Center", location: "Portland, OR", manager: "Mike Williams", description: "Distribution center" }
+      { facility_name: "Main Warehouse", location: "Seattle, WA" },
+      { facility_name: "Downtown Store", location: "Seattle, WA" },
+      { facility_name: "South Distribution Center", location: "Portland, OR" }
     ];
 
-    defaultFacilities.forEach(facility => {
-      this.createFacility(facility);
-    });
+    for (const facility of defaultFacilities) {
+      try {
+        await this.createFacility(facility);
+      } catch (error) {
+        console.error('Error creating facility:', error);
+      }
+    }
   }
 
   // User methods
