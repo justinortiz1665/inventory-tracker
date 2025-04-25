@@ -200,12 +200,12 @@ export default function CheckoutDialog({
                       className="flex items-center justify-between p-2 hover:bg-gray-100 rounded cursor-pointer"
                       onClick={() => addItem({id: item.id, name: item.item_name})}
                     >
+                      <Button type="button" size="sm" variant="ghost" className="mr-2">
+                        <Plus className="h-4 w-4" />
+                      </Button>
                       <div>
                         <div className="font-medium text-xs">({item.quantity}) {item.item_name}</div>
                       </div>
-                      <Button type="button" size="sm" variant="ghost">
-                        <Plus className="h-4 w-4" />
-                      </Button>
                     </div>
                   ))) : (
                     <div className="p-4 text-center text-gray-500">No items found</div>
@@ -219,6 +219,15 @@ export default function CheckoutDialog({
                   <ScrollArea className="h-[300px] border rounded-md p-2">
                   {selectedItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-between p-2 border-b last:border-0">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeItem(item.id)}
+                        className="mr-2"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
                       <div className="flex-1">
                         <div className="font-medium">{item.name}</div>
                         <div className="flex items-center gap-2 mt-1">
@@ -231,14 +240,6 @@ export default function CheckoutDialog({
                           />
                         </div>
                       </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeItem(item.id)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
                     </div>
                   ))}
                   </ScrollArea>
