@@ -149,7 +149,7 @@ export default function CheckoutDialog({
         setSelectedItems([]);
         onClose();
       }}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Checkout to Facility</DialogTitle>
           <DialogDescription>
