@@ -213,8 +213,11 @@ export default function CheckoutDialog({
                 </ScrollArea>
               </div>
 
-              <div>
-                <h4 className="font-medium mb-2">Selected Items</h4>
+              <div className="space-y-4">
+                <div className="relative invisible">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+                  <Input className="pl-10" disabled />
+                </div>
                 <ScrollArea className="h-[300px] border rounded-md p-2">
                   {selectedItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-between p-2 border-b last:border-0">
