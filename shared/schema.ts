@@ -103,10 +103,11 @@ export const inventoryTransactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
   user_id: integer("user_id").notNull(),
   item_id: integer("item_id").notNull(),
-  facility_id: integer("facility_id").notNull(),
-  transaction_type: text("transaction_type").notNull(),
+  from_facility_id: integer("from_facility_id"),
+  to_facility_id: integer("to_facility_id"),
   quantity: integer("quantity").notNull(),
-  timestamp: timestamp("timestamp").defaultNow(),
+  notes: text("notes"),
+  transaction_date: timestamp("transaction_date").defaultNow(),
 });
 
 export const insertInventoryTransactionSchema = createInsertSchema(inventoryTransactions).pick({
