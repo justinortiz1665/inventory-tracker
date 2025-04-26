@@ -35,10 +35,6 @@ export default function Dashboard() {
             <Plus className="mr-2 h-4 w-4" />
             Add Item
           </Button>
-          <Button variant="outline">
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Item
-          </Button>
         </div>
       </div>
 
