@@ -198,7 +198,13 @@ export class DbStorage implements IStorage {
   }
 
   async getInventoryItemById(id: number): Promise<InventoryItem | undefined> {
-    return this.inventoryItems.get(id);
+    try {
+      const result = await db.select().from(inventoryItems).where(eq(inventoryItems.id, id));
+      return result[0];
+    } catch (error) {
+      console.error('Error fetching inventory item:', error);
+      return undefined;
+    }
   }
 
   async getInventoryItemsByCategory(category: string): Promise<InventoryItem[]> {

@@ -304,8 +304,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       for (const item of items) {
         const { itemId, quantity } = item;
         
+        // Validate item exists first
+        const existingItem = await storage.getInventoryItemById(itemId);
+        if (!existingItem) {
+          throw new Error(`Item with ID ${itemId} not found in inventory`);
+        }
+        
         try {
-          // First create the transaction record
+          // First update facility inventory
+          const result = await storage.addItemToFacility(facilityId, itemId, quantity);
+          
+          // Then create transaction record if successful
           await storage.createTransaction({
             user_id: 1, // Default user ID for now
             item_id: itemId,
@@ -314,9 +323,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
             quantity: quantity,
             notes: "Bulk checkout"
           });
-          
-          // Then update facility inventory
-          const result = await storage.addItemToFacility(facilityId, itemId, quantity);
           results.push(result);
         } catch (error) {
           console.error(`Failed to process item ${itemId}:`, error);
