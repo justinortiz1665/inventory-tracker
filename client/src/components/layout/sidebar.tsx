@@ -38,11 +38,6 @@ export default function Sidebar({ className }: SidebarProps) {
       icon: <Tag className="h-5 w-5" /> 
     },
     { 
-      href: "/reports", 
-      label: "Reports", 
-      icon: <BarChart2 className="h-5 w-5" /> 
-    },
-    { 
       href: "/settings", 
       label: "Settings", 
       icon: <Settings className="h-5 w-5" /> 
