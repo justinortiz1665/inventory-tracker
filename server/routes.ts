@@ -303,18 +303,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const results = [];
       for (const item of items) {
         const { itemId, quantity } = item;
-        const result = await storage.addItemToFacility(facilityId, itemId, quantity);
         
-        // Create transaction record for each item
-        await storage.createTransaction({
-          itemId: itemId,
-          fromFacilityId: null, // null indicates main inventory
-          toFacilityId: facilityId,
-          quantity: quantity,
-          notes: "Bulk checkout"
-        });
-        
-        results.push(result);
+        try {
+          // First create the transaction record
+          await storage.createTransaction({
+            user_id: 1, // Default user ID for now
+            item_id: itemId,
+            from_facility_id: null,
+            to_facility_id: facilityId,
+            quantity: quantity,
+            notes: "Bulk checkout"
+          });
+          
+          // Then update facility inventory
+          const result = await storage.addItemToFacility(facilityId, itemId, quantity);
+          results.push(result);
+        } catch (error) {
+          console.error(`Failed to process item ${itemId}:`, error);
+          throw new Error(`Failed to process item ${itemId}: ${error.message}`);
+        }
       }
 
       res.status(201).json(results);
