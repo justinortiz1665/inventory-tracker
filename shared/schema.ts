@@ -101,7 +101,7 @@ export type InsertFacilityInventoryItem = z.infer<typeof insertFacilityInventory
 export type FacilityInventoryItem = typeof facilityInventoryItems.$inferSelect;
 
 // Inventory transactions
-export const inventoryTransactions = pgTable("transactions", {
+export const transactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
   user_id: integer("user_id").notNull(),
   item_id: integer("item_id").notNull(),

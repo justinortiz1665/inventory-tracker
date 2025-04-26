@@ -4,7 +4,7 @@ import {
   facilities, type Facility, type InsertFacility,
   inventoryItems, type InventoryItem, type InsertInventoryItem,
   facilityInventoryItems, type FacilityInventoryItem, type InsertFacilityInventoryItem,
-  inventoryTransactions, type InventoryTransaction, type InsertInventoryTransaction,
+  transactions, type InventoryTransaction, type InsertInventoryTransaction,
   activityLogs, type ActivityLog, type InsertActivityLog
 } from "@shared/schema";
 import { or, like, sql } from "drizzle-orm";
