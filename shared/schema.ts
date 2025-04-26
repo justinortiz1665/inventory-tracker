@@ -87,6 +87,8 @@ export const facilityInventoryItems = pgTable("facility_inventory", {
   item_id: integer("item_id").notNull(),
   quantity: integer("quantity").notNull(),
   last_updated: timestamp("last_updated").defaultNow(),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
 });
 
 export const insertFacilityInventoryItemSchema = createInsertSchema(facilityInventoryItems).pick({
