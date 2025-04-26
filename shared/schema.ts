@@ -112,12 +112,13 @@ export const transactions = pgTable("transactions", {
   transaction_date: timestamp("transaction_date").defaultNow(),
 });
 
-export const insertInventoryTransactionSchema = createInsertSchema(inventoryTransactions).pick({
+export const insertInventoryTransactionSchema = createInsertSchema(transactions).pick({
   user_id: true,
   item_id: true,
-  facility_id: true,
-  transaction_type: true,
+  from_facility_id: true,
+  to_facility_id: true,
   quantity: true,
+  notes: true,
 });
 
 export type InsertInventoryTransaction = z.infer<typeof insertInventoryTransactionSchema>;
